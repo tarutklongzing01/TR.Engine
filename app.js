@@ -208,7 +208,6 @@ window.calcInjector = function () {
   }
 
   const liters = engine / 1000;
-
   const gasHp = liters * 120;
   const e20Hp = liters * 125;
   const e85Hp = liters * 135;
@@ -285,7 +284,7 @@ onAuthStateChanged(auth, async (user) => {
   const memberRole = $("memberRole");
 
   if (memberStatus) {
-    memberStatus.textContent = `สถานะ: ${user.displayName || "สมาชิก"} (${user.email})`;
+    memberStatus.textContent = "สมาชิก: กำลังโหลด...";
   }
 
   if (memberRole) {
@@ -294,13 +293,48 @@ onAuthStateChanged(auth, async (user) => {
 
   try {
     const snap = await getDoc(doc(db, "members", user.uid));
+
+    let nickname = "";
+    let role = "member";
+
     if (snap.exists()) {
       const data = snap.data();
-      if (memberRole) {
-        memberRole.textContent = `สิทธิ์: ${data.role || "member"}`;
-      }
+      nickname = (data.displayName || "").trim();
+      role = (data.role || "member").trim();
+    }
+
+    if (!nickname) {
+      nickname = (user.displayName || "").trim();
+    }
+
+    if (!nickname && user.email) {
+      nickname = user.email.split("@")[0];
+    }
+
+    if (!nickname) {
+      nickname = "สมาชิก";
+    }
+
+    if (memberStatus) {
+      memberStatus.textContent = `สมาชิก: ${nickname}`;
+    }
+
+    if (memberRole) {
+      memberRole.textContent = `สิทธิ์: ${role}`;
     }
   } catch (err) {
     console.error("read member profile error:", err);
+
+    let nickname = (user.displayName || "").trim();
+    if (!nickname && user.email) {
+      nickname = user.email.split("@")[0];
+    }
+    if (!nickname) {
+      nickname = "สมาชิก";
+    }
+
+    if (memberStatus) {
+      memberStatus.textContent = `สมาชิก: ${nickname}`;
+    }
   }
 });
