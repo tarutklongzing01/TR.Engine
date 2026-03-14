@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>เข้าสู่ระบบ - TR REMAP</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="badge">TR REMAP MEMBERS</div>
+      <div class="brand-wrap">
+        <div class="brand-logo">TR REMAP</div>
+        <div class="brand-credit">By Tarutserway</div>
+      </div>
+      <h2>เข้าสู่ระบบ</h2>
+      <div class="subtitle">ล็อกอินด้วยอีเมลและรหัสผ่านจาก Firebase Authentication</div>
+      <div class="auth-tabs">
+        <button class="active" onclick="location.href='login.html'">เข้าสู่ระบบ</button>
+        <button onclick="location.href='register.html'">สมัครสมาชิก</button>
+      </div>
+
+      <div class="field"><label>อีเมล</label><input id="loginEmail" type="email" placeholder="example@mail.com"></div>
+      <div class="field"><label>รหัสผ่าน</label><input id="loginPassword" type="password" placeholder="อย่างน้อย 6 ตัวอักษร"></div>
+
+      <button class="btn primary" style="width:100%" onclick="loginMember()">เข้าสู่ระบบ</button>
+      <div class="msg" id="authMessage">ยังไม่มีบัญชี? ไปที่หน้าสมัครสมาชิกได้เลย</div>
+    </div>
+  </div>
+
+  <script type="module" src="auth.js"></script>
+</body>
+</html>

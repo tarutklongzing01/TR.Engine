@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>สมัครสมาชิก - TR REMAP</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="badge">TR REMAP MEMBERS</div>
+      <div class="brand-wrap">
+        <div class="brand-logo">TR REMAP</div>
+        <div class="brand-credit">By Tarutserway</div>
+      </div>
+      <h2>สมัครสมาชิก</h2>
+      <div class="subtitle">สร้างบัญชีด้วย Firebase Authentication และบันทึกโปรไฟล์ลง Firestore</div>
+      <div class="auth-tabs">
+        <button onclick="location.href='login.html'">เข้าสู่ระบบ</button>
+        <button class="active" onclick="location.href='register.html'">สมัครสมาชิก</button>
+      </div>
+
+      <div class="field"><label>ชื่อที่แสดง</label><input id="regDisplayName" type="text" placeholder="เช่น Tarutserway"></div>
+      <div class="field"><label>อีเมล</label><input id="regEmail" type="email" placeholder="example@mail.com"></div>
+      <div class="field"><label>รหัสผ่าน</label><input id="regPassword" type="password" placeholder="อย่างน้อย 6 ตัวอักษร"></div>
+      <div class="field"><label>ยืนยันรหัสผ่าน</label><input id="regConfirmPassword" type="password" placeholder="กรอกรหัสผ่านอีกครั้ง"></div>
+
+      <button class="btn success" style="width:100%" onclick="registerMember()">สมัครสมาชิก</button>
+      <div class="msg" id="authMessage">หลังสมัครเสร็จ ระบบจะพาไปหน้า app อัตโนมัติ</div>
+    </div>
+  </div>
+
+  <script type="module" src="auth.js"></script>
+</body>
+</html>

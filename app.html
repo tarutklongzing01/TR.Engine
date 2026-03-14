@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TR REMAP Engine Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">Version 1.0.1</div>
+      <div class="brand-wrap">
+        
+        
+      </div>
+      <h1>Engine Calculator Pro</h1>
+      <div class="subtitle">เครื่องมือคำนวณสเปครถแต่ง/รถใช้งานสำหรับช่างและสายโมเครื่อง ใช้งานง่าย กดคำนวณได้ทันที</div>
+    </section>
+
+    <div class="topbar">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="user-pill" id="memberStatus">สถานะ: กำลังโหลด...</div>
+        <div class="user-pill" id="memberRole">สิทธิ์: -</div>
+      </div>
+      <div class="user-actions">
+        <button class="btn secondary" onclick="fillDemo()">ใส่ค่าตัวอย่าง</button>
+        <button class="btn secondary" onclick="resetAll()">ล้างค่าทั้งหมด</button>
+        <button class="btn danger" onclick="logoutMember()">ออกจากระบบ</button>
+      </div>
+    </div>
+
+    <section class="grid">
+      <div class="card">
+        <h3>คำนวณปริมาตรกระบอกสูบ (Engine CC)</h3>
+        <div class="desc">ใช้หาความจุเครื่องจริงหลังเปลี่ยนขนาดลูกหรือยืดชัก</div>
+        <div class="fields">
+          <div class="field"><label>Bore (mm)</label><input id="cc_bore" type="number" step="0.01" placeholder="61.0"></div>
+          <div class="field"><label>Stroke (mm)</label><input id="cc_stroke" type="number" step="0.01" placeholder="57.9"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcCC()">คำนวณ</button>
+        </div>
+        <div class="result" id="cc_result">
+          <div class="main">Engine = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>อัตราส่วนการอัด (Static CR)</h3>
+        <div class="desc">ใช้ประเมินกำลังอัดพื้นฐาน เพื่อเลือกน้ำมันและเช็กความเสี่ยงเขก</div>
+        <div class="fields">
+          <div class="field"><label>Engine CC</label><input id="scr_engine" type="number" step="0.01" placeholder="169.4"></div>
+          <div class="field"><label>Chamber CC @TDC</label><input id="scr_chamber" type="number" step="0.01" placeholder="15.5"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcSCR()">คำนวณ</button>
+        </div>
+        <div class="result" id="scr_result">
+          <div class="main">Static CR = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>อัตราส่วนการอัดแท้จริง (Dynamic CR)</h3>
+        <div class="desc">ประเมินกำลังอัดตอนเครื่องทำงานจริง โดยอิงการปิดวาล์วไอดี</div>
+        <div class="fields">
+          <div class="field"><label>Static CR</label><input id="dcr_scr" type="number" step="0.01" placeholder="11.93"></div>
+          <div class="field"><label>IVC (°ABDC)</label><input id="dcr_ivc" type="number" step="0.1" placeholder="50"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcDCR()">คำนวณ</button>
+        </div>
+        <div class="result" id="dcr_result">
+          <div class="main">Dynamic CR = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Rod Ratio</h3>
+        <div class="desc">เช็กบุคลิกเครื่องและความสมดุลระหว่างก้านสูบกับระยะชัก</div>
+        <div class="fields">
+          <div class="field"><label>Rod Length (mm)</label><input id="rod_length" type="number" step="0.01" placeholder="97"></div>
+          <div class="field"><label>Stroke (mm)</label><input id="rod_stroke" type="number" step="0.01" placeholder="57.9"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcRodRatio()">คำนวณ</button>
+        </div>
+        <div class="result" id="rod_result">
+          <div class="main">Rod Ratio = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Piston Speed</h3>
+        <div class="desc">ใช้เช็กภาระลูกสูบ/ก้านสูบเมื่อวิ่งที่รอบต่าง ๆ</div>
+        <div class="fields">
+          <div class="field"><label>Stroke (mm)</label><input id="ps_stroke" type="number" step="0.01" placeholder="57.9"></div>
+          <div class="field"><label>RPM</label><input id="ps_rpm" type="number" step="1" placeholder="10000"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcPistonSpeed()">คำนวณ</button>
+        </div>
+        <div class="result" id="ps_result">
+          <div class="main">Piston Speed = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Safe RPM</h3>
+        <div class="desc">หารอบสูงสุดเชิงทฤษฎีจาก Piston Speed เป้าหมาย</div>
+        <div class="fields">
+          <div class="field"><label>Piston Speed Target (m/s)</label><input id="rpm_speed" type="number" step="0.1" placeholder="24"></div>
+          <div class="field"><label>Stroke (mm)</label><input id="rpm_stroke" type="number" step="0.01" placeholder="57.9"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcSafeRPM()">คำนวณ</button>
+        </div>
+        <div class="result" id="rpm_result">
+          <div class="main">Safe Limit = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>CFM ความต้องการอากาศ</h3>
+        <div class="desc">ช่วยกะเรือนลิ้น คาร์บู หรือพอร์ตฝาว่าใหญ่ประมาณไหนถึงพอดี</div>
+        <div class="fields">
+          <div class="field"><label>Engine CC</label><input id="cfm_engine" type="number" step="0.01" placeholder="169.4"></div>
+          <div class="field"><label>RPM</label><input id="cfm_rpm" type="number" step="1" placeholder="10000"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcCFM()">คำนวณ</button>
+        </div>
+        <div class="result" id="cfm_result">
+          <div class="main">CFM = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Ring Gap</h3>
+        <div class="desc">ช่วยกะระยะปากแหวนเบื้องต้นสำหรับการใช้งานทั่วไป/กึ่ง performance</div>
+        <div class="fields">
+          <div class="field"><label>Bore (mm)</label><input id="ring_bore" type="number" step="0.01" placeholder="61"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcRingGap()">คำนวณ</button>
+        </div>
+        <div class="result" id="ring_result">
+          <div class="main">Ring Gap = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Injector Flow Rate</h3>
+        <div class="desc">คำนวณขนาดหัวฉีดแบบประมาณการจากความจุเครื่องสำหรับรถสูบเดียว</div>
+        <div class="fields">
+          <div class="field"><label>Engine CC</label><input id="inj_engine" type="number" step="0.01" placeholder="169.4"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="calcInjector()">คำนวณ</button>
+        </div>
+        <div class="result" id="inj_result">
+          <div class="main">Injector = -</div>
+          <div class="muted">รอคำนวณ</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      TR REMAP • Firebase multi-page edition<br>
+      Designed by Tarutserway
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
