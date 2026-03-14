@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engine Calculator Pro</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: #0e1b2d;
+      --panel-2: #12233a;
+      --line: #223b5b;
+      --text: #eef6ff;
+      --muted: #9fb4cc;
+      --blue: #53a7ff;
+      --green: #25d38a;
+      --yellow: #ffd166;
+      --red: #ff6b6b;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(83,167,255,.18), transparent 25%),
+        radial-gradient(circle at top left, rgba(37,211,138,.12), transparent 20%),
+        linear-gradient(180deg, #06101c 0%, #091523 100%);
+      color: var(--text);
+    }
+
+    .container {
+      width: min(1280px, calc(100% - 24px));
+      margin: 24px auto 48px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(83,167,255,.18), rgba(37,211,138,.08));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(83,167,255,.12);
+      border: 1px solid rgba(83,167,255,.25);
+      border-radius: 999px;
+      color: #d9eeff;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(83,167,255,.12));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .brand-credit {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+      color: #d5e6f8;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 900px;
+      margin-bottom: 18px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .quick-item {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .quick-item .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .quick-item .value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+
+    .toolbar button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      background: #13263f;
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: .18s ease;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .toolbar button:hover { transform: translateY(-1px); }
+    .toolbar .primary { background: linear-gradient(135deg, #1e88ff, #4db6ff); }
+    .toolbar .danger { background: linear-gradient(135deg, #cb3b4f, #ff6b6b); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17,31,51,.95), rgba(10,21,36,.96));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      opacity: .85;
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin-bottom: 14px;
+      min-height: 44px;
+    }
+
+    .note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(255, 209, 102, .10), rgba(255, 209, 102, .05));
+      color: #ffe7aa;
+      border: 1px solid rgba(255, 209, 102, .22);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .note-icon {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 209, 102, .16);
+      border: 1px solid rgba(255, 209, 102, .28);
+      color: #ffd978;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 0 0 3px rgba(255, 209, 102, .04);
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .fields.one { grid-template-columns: 1fr; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      color: #cfe0f2;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      background: #0a1728;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      flex: 1;
+      min-width: 110px;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: white;
+      transition: .18s ease;
+    }
+
+    .calc-btn { background: linear-gradient(135deg, #1290ff, #56b9ff); }
+    .reset-btn { background: linear-gradient(135deg, #3a4c66, #5b6f8b); }
+    .copy-btn { background: linear-gradient(135deg, #14b86f, #2de09b); }
+    .actions button:hover { transform: translateY(-1px); }
+
+    .result {
+      margin-top: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .result .main {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .result .sub {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .mini-results {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .mini-item span:first-child { color: var(--muted); }
+    .mini-item strong { color: white; }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 720px) {
+      .fields { grid-template-columns: 1fr; }
+      .hero { padding: 22px; }
+      .card { padding: 16px; }
+      .brand-wrap { align-items: flex-start; }
+      .brand-logo { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+        <div class="badge">เวอร์ชัน 1.0.1</div>
+      <div class="brand-wrap">
+        <div class="brand-logo">TR REMAP</div>
+        <div class="brand-credit">By Tarutserway</div>
+      </div>
+      <h1>Engine Calculator Pro</h1>
+      <div class="subtitle">
+        เครื่องมือคำนวณสเปครถแต่ง/รถใช้งานสำหรับช่างและสายโมเครื่อง ใช้งานง่าย กดคำนวณได้ทันที มีทั้ง Engine CC, Static CR, Dynamic CR, Rod Ratio, Piston Speed, Safe RPM, CFM, Ring Gap และ Injector Flow Rate
+      </div>
+
+      <div class="quick-grid">
+        <div class="quick-item">
+          <div class="label">สูตรพร้อม</div>
+          <div class="value">9 โมดูล</div>
+        </div>
+        <div class="quick-item">
+          <div class="label">รองรับ</div>
+          <div class="value">มือถือ / Desktop</div>
+        </div>
+        <div class="quick-item">
+          <div class="label">เหมาะกับ</div>
+          <div class="value">รถบ้าน / รถซิ่ง</div>
+        </div>
+        <div class="quick-item">
+          <div class="label">ใช้งาน</div>
+          <div class="value">เปิดไฟล์แล้วใช้ได้เลย</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <button class="primary" onclick="scrollToTopPage()">ขึ้นด้านบน</button>
+      <button onclick="fillDemo()">ใส่ค่าตัวอย่าง</button>
+      <button class="danger" onclick="resetAll()">ล้างค่าทั้งหมด</button>
+    </div>
+
+    <section class="grid">
+      <div class="card" id="card-cc">
+        <h2>คำนวณปริมาตรกระบอกสูบ (Engine CC)</h2>
+        <div class="desc">ใช้หาความจุเครื่องจริงหลังเปลี่ยนขนาดลูกหรือยืดชัก</div>
+        <div class="fields">
+          <div class="field"><label>Bore (mm)</label><input id="cc_bore" type="number" step="0.01" placeholder="เช่น 61.0"></div>
+          <div class="field"><label>Stroke (mm)</label><input id="cc_stroke" type="number" step="0.01" placeholder="เช่น 57.9"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcCC()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-cc')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('cc_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="cc_result"><div class="main">Engine = -</div><div class="sub">รอคำนวณ</div></div>
+      </div>
+
+      <div class="card" id="card-scr">
+        <h2>อัตราส่วนการอัด (Static CR)</h2>
+        <div class="desc">ใช้ประเมินกำลังอัดพื้นฐาน เพื่อเลือกน้ำมันและเช็กความเสี่ยงเขก</div>
+        <div class="fields">
+          <div class="field"><label>Engine CC</label><input id="scr_engine" type="number" step="0.01" placeholder="เช่น 169.4"></div>
+          <div class="field"><label>Chamber CC @TDC</label><input id="scr_chamber" type="number" step="0.01" placeholder="เช่น 15.5"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcSCR()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-scr')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('scr_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="scr_result"><div class="main">Static CR = -</div><div class="sub">รอคำนวณ</div></div>
+      </div>
+
+      <div class="card" id="card-dcr">
+        <h2>อัตราส่วนการอัดแท้จริง (Dynamic CR)</h2>
+        <div class="desc">ประเมินกำลังอัดตอนเครื่องทำงานจริง โดยอิงการปิดวาล์วไอดี</div>
+        <div class="fields">
+          <div class="field"><label>Static CR</label><input id="dcr_scr" type="number" step="0.01" placeholder="เช่น 11.93"></div>
+          <div class="field"><label>IVC (°ABDC)</label><input id="dcr_ivc" type="number" step="0.1" placeholder="เช่น 50"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcDCR()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-dcr')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('dcr_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="dcr_result"><div class="main">Dynamic CR = -</div><div class="sub">เป็นค่าโดยประมาณ ควรอ้างอิงองศาแคมจริง</div></div>
+      </div>
+
+      <div class="card" id="card-rod">
+        <h2>Rod Ratio</h2>
+        <div class="desc">เช็กบุคลิกเครื่องและความสมดุลระหว่างก้านสูบกับระยะชัก</div>
+        <div class="fields">
+          <div class="field"><label>Rod Length (mm)</label><input id="rod_length" type="number" step="0.01" placeholder="เช่น 97"></div>
+          <div class="field"><label>Stroke (mm)</label><input id="rod_stroke" type="number" step="0.01" placeholder="เช่น 57.9"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcRodRatio()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-rod')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('rod_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="rod_result"><div class="main">Rod Ratio = -</div><div class="sub">ค่าช่วงนิยมสำหรับรถมอเตอร์ไซค์มักอยู่ราว 1.70 - 1.75</div></div>
+      </div>
+
+      <div class="card" id="card-ps">
+        <h2>Piston Speed</h2>
+        <div class="desc">ใช้เช็กภาระลูกสูบ/ก้านสูบเมื่อวิ่งที่รอบต่าง ๆ</div>
+        <div class="fields">
+          <div class="field"><label>Stroke (mm)</label><input id="ps_stroke" type="number" step="0.01" placeholder="เช่น 57.9"></div>
+          <div class="field"><label>RPM</label><input id="ps_rpm" type="number" step="1" placeholder="เช่น 10000"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcPistonSpeed()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-ps')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('ps_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="ps_result"><div class="main">Piston Speed = -</div><div class="sub">โดยทั่วไป 24-25 m/s เริ่มเป็นโซนกดภาระหนัก</div></div>
+      </div>
+
+      <div class="card" id="card-rpm">
+        <h2>Safe RPM</h2>
+        <div class="desc">หารอบสูงสุดเชิงทฤษฎีจาก Piston Speed เป้าหมาย</div>
+        <div class="fields">
+          <div class="field"><label>Piston Speed Target (m/s)</label><input id="rpm_speed" type="number" step="0.1" placeholder="เช่น 24"></div>
+          <div class="field"><label>Stroke (mm)</label><input id="rpm_stroke" type="number" step="0.01" placeholder="เช่น 57.9"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcSafeRPM()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-rpm')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('rpm_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="rpm_result"><div class="main">Safe Limit = -</div><div class="sub">ควรตั้งตัดรอบต่ำกว่าค่านี้ประมาณ 500-1,000 rpm</div></div>
+      </div>
+
+      <div class="card" id="card-cfm">
+        <h2>CFM ความต้องการอากาศ</h2>
+        <div class="desc">ช่วยกะเรือนลิ้น คาร์บู หรือพอร์ตฝาว่าใหญ่ประมาณไหนถึงพอดี</div>
+        <div class="fields">
+          <div class="field"><label>Engine CC</label><input id="cfm_engine" type="number" step="0.01" placeholder="เช่น 169.4"></div>
+          <div class="field"><label>RPM</label><input id="cfm_rpm" type="number" step="1" placeholder="เช่น 10000"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcCFM()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-cfm')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('cfm_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="cfm_result">
+          <div class="main">CFM = -</div>
+          <div class="mini-results">
+            <div class="mini-item"><span>Standard</span><strong>-</strong></div>
+            <div class="mini-item"><span>Touring</span><strong>-</strong></div>
+            <div class="mini-item"><span>Racing</span><strong>-</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="card-ring">
+        <h2>Ring Gap</h2>
+        <div class="desc">ช่วยกะระยะปากแหวนเบื้องต้นสำหรับการใช้งานทั่วไป/กึ่ง performance</div>
+        <div class="fields one">
+          <div class="field"><label>Bore (mm)</label><input id="ring_bore" type="number" step="0.01" placeholder="เช่น 61"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcRingGap()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-ring')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('ring_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="ring_result">
+          <div class="main">Ring Gap = -</div>
+          <div class="mini-results">
+            <div class="mini-item"><span>Top Ring</span><strong>-</strong></div>
+            <div class="mini-item"><span>Second Ring</span><strong>-</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="card-inj">
+        <h2>Injector Flow Rate</h2>
+        <div class="desc">คำนวณขนาดหัวฉีดแบบประมาณการจากความจุเครื่องสำหรับรถสูบเดียว</div>
+        <div class="fields one">
+          <div class="field"><label>Engine CC</label><input id="inj_engine" type="number" step="0.01" placeholder="เช่น 169.4"></div>
+        </div>
+        <div class="actions">
+          <button class="calc-btn" onclick="calcInjector()">คำนวณ</button>
+          <button class="reset-btn" onclick="resetCard('card-inj')">ล้าง</button>
+          <button class="copy-btn" onclick="copyResult('inj_result')">คัดลอกผล</button>
+        </div>
+        <div class="result" id="inj_result">
+          <div class="main">Injector = -</div>
+          <div class="mini-results">
+            <div class="mini-item"><span>Gas95</span><strong>-</strong></div>
+            <div class="mini-item"><span>E20</span><strong>-</strong></div>
+            <div class="mini-item"><span>E85</span><strong>-</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      TR REMAP • ออกแบบใหม่ให้ใช้งานได้ทันที • เหมาะสำหรับเอาไปต่อยอดเป็นเว็บจริงหรือฝังในโปรเจกต์ของคุณ<br>
+      Designed by Tarutserway
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const PI = Math.PI;
+
+    function num(id) {
+      return parseFloat($(id).value);
+    }
+
+    function valid(...vals) {
+      return vals.every(v => Number.isFinite(v) && v > 0);
+    }
+
+    function fmt(n, digits = 2) {
+      return Number(n).toLocaleString('th-TH', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+    }
+
+    function setResult(id, html) {
+      $(id).innerHTML = html;
+    }
+
+    function ratingPistonSpeed(speed) {
+      if (speed < 20) return 'ใช้งานสบาย';
+      if (speed < 24) return 'เริ่มตึง';
+      if (speed <= 25) return 'ค่อนข้างสูง';
+      return 'เสี่ยงสูง';
+    }
+
+    function calcCC() {
+      const bore = num('cc_bore');
+      const stroke = num('cc_stroke');
+      if (!valid(bore, stroke)) return alert('กรอก Bore และ Stroke ให้ถูกต้อง');
+      const cc = (PI / 4) * bore * bore * stroke / 1000;
+      setResult('cc_result', `
+        <div class="main">Engine = ${fmt(cc)} cc</div>
+        <div class="sub">จาก Bore ${fmt(bore)} mm และ Stroke ${fmt(stroke)} mm</div>
+      `);
+      $('scr_engine').value = cc.toFixed(2);
+      $('cfm_engine').value = cc.toFixed(2);
+      $('inj_engine').value = cc.toFixed(2);
+    }
+
+    function calcSCR() {
+      const engine = num('scr_engine');
+      const chamber = num('scr_chamber');
+      if (!valid(engine, chamber)) return alert('กรอก Engine CC และ Chamber CC ให้ถูกต้อง');
+      const scr = (engine + chamber) / chamber;
+      let hint = 'ใช้งานทั่วไปควรบาลานซ์กับน้ำมันและองศาแคม';
+      if (scr <= 11.5) hint = 'โซนใช้งานค่อนข้างปลอดภัย';
+      else if (scr <= 12.2) hint = 'โซนค่อนข้างแน่น ควรจูนละเอียด';
+      else hint = 'โซนอัดสูง ควรระวังน็อกและอุณหภูมิ';
+      setResult('scr_result', `
+        <div class="main">Static CR = ${fmt(scr)} : 1</div>
+        <div class="sub">${hint}</div>
+      `);
+      $('dcr_scr').value = scr.toFixed(2);
+    }
+
+    function calcDCR() {
+      const scr = num('dcr_scr');
+      const ivc = num('dcr_ivc');
+      if (!valid(scr, ivc) || ivc >= 180) return alert('กรอก Static CR และ IVC ให้ถูกต้อง');
+      const eff = (180 - ivc) / 180;
+      const dcr = 1 + (scr - 1) * eff;
+      setResult('dcr_result', `
+        <div class="main">Dynamic CR = ${fmt(dcr)} : 1</div>
+        <div class="sub">Effective Stroke ≈ ${fmt(eff * 100)}% ของระยะชักเต็ม • เป็นค่าประมาณเพื่อช่วยเซ็ตอัพเบื้องต้น</div>
+      `);
+    }
+
+    function calcRodRatio() {
+      const rod = num('rod_length');
+      const stroke = num('rod_stroke');
+      if (!valid(rod, stroke)) return alert('กรอก Rod Length และ Stroke ให้ถูกต้อง');
+      const rr = rod / stroke;
+      let note = 'สมดุลดี';
+      if (rr < 1.65) note = 'ก้านค่อนข้างสั้น รอบต้นมาไวแต่ side load สูง';
+      else if (rr <= 1.75) note = 'ช่วงสมดุล เหมาะกับการใช้งานทั่วไป';
+      else note = 'ก้านค่อนข้างยาว รอบปลายอาจเด่นกว่า';
+      setResult('rod_result', `
+        <div class="main">Rod Ratio = ${fmt(rr, 3)}</div>
+        <div class="sub">${note}</div>
+      `);
+    }
+
+    function calcPistonSpeed() {
+      const stroke = num('ps_stroke');
+      const rpm = num('ps_rpm');
+      if (!valid(stroke, rpm)) return alert('กรอก Stroke และ RPM ให้ถูกต้อง');
+      const speed = 2 * (stroke / 1000) * rpm / 60;
+      setResult('ps_result', `
+        <div class="main">Piston Speed = ${fmt(speed)} m/s</div>
+        <div class="sub">สถานะ: ${ratingPistonSpeed(speed)} • ค่านี้สัมพันธ์กับภาระก้านและสลักลูกสูบ</div>
+      `);
+      $('rpm_speed').value = speed.toFixed(2);
+      $('rpm_stroke').value = stroke.toFixed(2);
+    }
+
+    function calcSafeRPM() {
+      const speed = num('rpm_speed');
+      const stroke = num('rpm_stroke');
+      if (!valid(speed, stroke)) return alert('กรอก Piston Speed Target และ Stroke ให้ถูกต้อง');
+      const rpm = (speed * 60) / (2 * (stroke / 1000));
+      setResult('rpm_result', `
+        <div class="main">Safe Limit = ${fmt(rpm, 0)} rpm</div>
+        <div class="sub">แนะนำตั้ง Rev Limiter แถว ๆ ${fmt(rpm - 500, 0)} ถึง ${fmt(rpm - 1000, 0)} rpm ตามความแข็งแรงของชุดวาล์ว</div>
+      `);
+    }
+
+    function calcCFM() {
+      const engine = num('cfm_engine');
+      const rpm = num('cfm_rpm');
+      if (!valid(engine, rpm)) return alert('กรอก Engine CC และ RPM ให้ถูกต้อง');
+      const cid = engine / 16.387;
+      const standard = cid * rpm * 0.85 / 3456;
+      const touring = cid * rpm * 0.95 / 3456;
+      const racing = cid * rpm * 1.05 / 3456;
+      setResult('cfm_result', `
+        <div class="main">CFM Estimate</div>
+        <div class="mini-results">
+          <div class="mini-item"><span>Standard</span><strong>${fmt(standard)}</strong></div>
+          <div class="mini-item"><span>Touring</span><strong>${fmt(touring)}</strong></div>
+          <div class="mini-item"><span>Racing</span><strong>${fmt(racing)}</strong></div>
+        </div>
+      `);
+    }
+
+    function calcRingGap() {
+      const boreMM = num('ring_bore');
+      if (!valid(boreMM)) return alert('กรอก Bore ให้ถูกต้อง');
+      const boreIn = boreMM / 25.4;
+      const topMM = boreIn * 0.0040 * 25.4;
+      const secondMM = boreIn * 0.0045 * 25.4;
+      setResult('ring_result', `
+        <div class="main">Ring Gap Estimate</div>
+        <div class="mini-results">
+          <div class="mini-item"><span>Top Ring</span><strong>${fmt(topMM, 3)} mm</strong></div>
+          <div class="mini-item"><span>Second Ring</span><strong>${fmt(secondMM, 3)} mm</strong></div>
+        </div>
+      `);
+    }
+
+    function calcInjector() {
+      const engine = num('inj_engine');
+      if (!valid(engine)) return alert('กรอก Engine CC ให้ถูกต้อง');
+      const liters = engine / 1000;
+
+      const gasHp = liters * 120;
+      const e20Hp = liters * 125;
+      const e85Hp = liters * 135;
+
+      const gas = gasHp * 0.55 * 10.5 / 0.85;
+      const e20 = e20Hp * 0.60 * 10.5 / 0.85;
+      const e85 = e85Hp * 0.75 * 10.5 / 0.85;
+
+      setResult('inj_result', `
+        <div class="main">Injector Estimate</div>
+        <div class="mini-results">
+          <div class="mini-item"><span>Gas95</span><strong>${fmt(gas, 0)} cc/min</strong></div>
+          <div class="mini-item"><span>E20</span><strong>${fmt(e20, 0)} cc/min</strong></div>
+          <div class="mini-item"><span>E85</span><strong>${fmt(e85, 0)} cc/min</strong></div>
+        </div>
+      `);
+    }
+
+    function copyResult(id) {
+      const text = $(id).innerText.trim();
+      navigator.clipboard.writeText(text)
+        .then(() => alert('คัดลอกผลแล้ว'))
+        .catch(() => alert('คัดลอกไม่สำเร็จ'));
+    }
+
+    function resetCard(cardId) {
+      const card = $(cardId);
+      card.querySelectorAll('input').forEach(el => el.value = '');
+      const result = card.querySelector('.result');
+      const main = result.querySelector('.main');
+      if (main) {
+        if (cardId === 'card-cc') result.innerHTML = '<div class="main">Engine = -</div><div class="sub">รอคำนวณ</div>';
+        if (cardId === 'card-scr') result.innerHTML = '<div class="main">Static CR = -</div><div class="sub">รอคำนวณ</div>';
+        if (cardId === 'card-dcr') result.innerHTML = '<div class="main">Dynamic CR = -</div><div class="sub">เป็นค่าโดยประมาณ ควรอ้างอิงองศาแคมจริง</div>';
+        if (cardId === 'card-rod') result.innerHTML = '<div class="main">Rod Ratio = -</div><div class="sub">ค่าช่วงนิยมสำหรับรถมอเตอร์ไซค์มักอยู่ราว 1.70 - 1.75</div>';
+        if (cardId === 'card-ps') result.innerHTML = '<div class="main">Piston Speed = -</div><div class="sub">โดยทั่วไป 24-25 m/s เริ่มเป็นโซนกดภาระหนัก</div>';
+        if (cardId === 'card-rpm') result.innerHTML = '<div class="main">Safe Limit = -</div><div class="sub">ควรตั้งตัดรอบต่ำกว่าค่านี้ประมาณ 500-1,000 rpm</div>';
+        if (cardId === 'card-cfm') result.innerHTML = '<div class="main">CFM = -</div><div class="mini-results"><div class="mini-item"><span>Standard</span><strong>-</strong></div><div class="mini-item"><span>Touring</span><strong>-</strong></div><div class="mini-item"><span>Racing</span><strong>-</strong></div></div>';
+        if (cardId === 'card-ring') result.innerHTML = '<div class="main">Ring Gap = -</div><div class="mini-results"><div class="mini-item"><span>Top Ring</span><strong>-</strong></div><div class="mini-item"><span>Second Ring</span><strong>-</strong></div></div>';
+        if (cardId === 'card-inj') result.innerHTML = '<div class="main">Injector = -</div><div class="mini-results"><div class="mini-item"><span>Gas95</span><strong>-</strong></div><div class="mini-item"><span>E20</span><strong>-</strong></div><div class="mini-item"><span>E85</span><strong>-</strong></div></div>';
+      }
+    }
+
+    function resetAll() {
+      ['card-cc','card-scr','card-dcr','card-rod','card-ps','card-rpm','card-cfm','card-ring','card-inj'].forEach(resetCard);
+    }
+
+    function fillDemo() {
+      $('cc_bore').value = 61;
+      $('cc_stroke').value = 57.9;
+      $('scr_chamber').value = 15.5;
+      $('dcr_ivc').value = 50;
+      $('rod_length').value = 97;
+      $('rod_stroke').value = 57.9;
+      $('ps_stroke').value = 57.9;
+      $('ps_rpm').value = 10000;
+      $('rpm_speed').value = 24;
+      $('rpm_stroke').value = 57.9;
+      $('cfm_rpm').value = 10000;
+      $('ring_bore').value = 61;
+      calcCC();
+      calcSCR();
+      calcDCR();
+      calcRodRatio();
+      calcPistonSpeed();
+      calcSafeRPM();
+      calcCFM();
+      calcRingGap();
+      calcInjector();
+    }
+
+    function scrollToTopPage() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
