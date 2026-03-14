@@ -5,27 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>เข้าสู่ระบบ - TR REMAP</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
   <div class="auth-shell">
     <div class="auth-card">
-      <div class="badge">TR REMAP MEMBERS</div>
-      <div class="brand-wrap">
-        <div class="brand-logo">TR REMAP</div>
-        <div class="brand-credit">By Tarutserway</div>
+      
+      <h2 style="text-align: center; margin: 10px 0 8px;">เข้าสู่ระบบ</h2>
+      <div class="subtitle" style="text-align: center; margin-bottom: 24px; font-size: 14px;">
+        ยินดีต้อนรับกลับเข้าสู่ระบบจัดการข้อมูล
       </div>
-      <h2>เข้าสู่ระบบ</h2>
-      <div class="subtitle">ล็อกอินด้วยอีเมลและรหัสผ่านจาก Firebase Authentication</div>
-      <div class="auth-tabs">
+
+      <div class="auth-tabs" style="margin-bottom: 30px;">
         <button class="active" onclick="location.href='login.html'">เข้าสู่ระบบ</button>
         <button onclick="location.href='register.html'">สมัครสมาชิก</button>
       </div>
 
-      <div class="field"><label>อีเมล</label><input id="loginEmail" type="email" placeholder="example@mail.com"></div>
-      <div class="field"><label>รหัสผ่าน</label><input id="loginPassword" type="password" placeholder="อย่างน้อย 6 ตัวอักษร"></div>
+      <div class="field">
+        <label>อีเมล</label>
+        <input id="loginEmail" type="email" placeholder="example@mail.com" required>
+      </div>
 
-      <button class="btn primary" style="width:100%" onclick="loginMember()">เข้าสู่ระบบ</button>
-      <div class="msg" id="authMessage">ยังไม่มีบัญชี? ไปที่หน้าสมัครสมาชิกได้เลย</div>
+      <div class="field" style="margin-bottom: 28px;">
+        <label>รหัสผ่าน</label>
+        <input id="loginPassword" type="password" placeholder="กรอกรหัสผ่านของคุณ" required>
+      </div>
+
+      <button class="btn primary" style="width:100%; padding: 16px; font-size: 16px; border-radius: 18px;" onclick="loginMember()">
+        เข้าสู่ระบบ
+      </button>
+
+      <div class="msg" id="authMessage" style="text-align: center; margin-top: 20px;">
+        ยังไม่มีบัญชีสมาชิก? <a href="register.html" style="color: var(--blue); font-weight: 600;">ลงทะเบียนที่นี่</a>
+      </div>
     </div>
   </div>
 
