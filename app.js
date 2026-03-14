@@ -7,7 +7,9 @@ import {
 import {
   getFirestore,
   doc,
-  getDoc
+  getDoc,
+  setDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -292,7 +294,8 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    const snap = await getDoc(doc(db, "members", user.uid));
+    const ref = doc(db, "members", user.uid);
+    const snap = await getDoc(ref);
 
     let nickname = "";
     let role = "member";
@@ -301,6 +304,21 @@ onAuthStateChanged(auth, async (user) => {
       const data = snap.data();
       nickname = (data.displayName || "").trim();
       role = (data.role || "member").trim();
+    } else {
+      nickname = (user.displayName || "").trim();
+      if (!nickname && user.email) {
+        nickname = user.email.split("@")[0];
+      }
+
+      await setDoc(ref, {
+        uid: user.uid,
+        displayName: nickname || "",
+        email: user.email || "",
+        role: "member",
+        createdAt: serverTimestamp()
+      });
+
+      role = "member";
     }
 
     if (!nickname) {
@@ -323,7 +341,7 @@ onAuthStateChanged(auth, async (user) => {
       memberRole.textContent = `สิทธิ์: ${role}`;
     }
   } catch (err) {
-    console.error("read member profile error:", err);
+    console.error("read/create member profile error:", err);
 
     let nickname = (user.displayName || "").trim();
     if (!nickname && user.email) {
