@@ -290,7 +290,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   if (memberRole) {
-    memberRole.textContent = "สิทธิ์: member";
+    memberRole.textContent = "ระดับ: member";
   }
 
   try {
@@ -338,7 +338,7 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     if (memberRole) {
-      memberRole.textContent = `สิทธิ์: ${role}`;
+      memberRole.textContent = `ระดับ: ${role}`;
     }
   } catch (err) {
     console.error("read/create member profile error:", err);

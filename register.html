@@ -4,54 +4,454 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>สมัครสมาชิก - TR REMAP</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0b1220;
+      --panel:#121c2f;
+      --panel2:#0f1728;
+      --border:#263755;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --blue:#4f8cff;
+      --blue2:#3b82f6;
+      --green:#22c55e;
+      --red:#ef4444;
+      --shadow:0 18px 40px rgba(0,0,0,.32);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      visibility:hidden;
+      font-family:'Kanit',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.08), transparent 24%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .auth-shell{
+      width:100%;
+      max-width:1120px;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      background:linear-gradient(180deg, rgba(18,28,47,.94), rgba(10,18,32,.96));
+      border:1px solid var(--border);
+      border-radius:30px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .auth-left{
+      padding:42px 34px;
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.18), transparent 26%),
+        linear-gradient(180deg, rgba(15,23,40,.96), rgba(10,18,32,.98));
+      border-right:1px solid rgba(255,255,255,.05);
+    }
+
+    .auth-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(79,140,255,.28);
+      background:rgba(79,140,255,.12);
+      color:#cfe0ff;
+      font-size:13px;
+      font-weight:600;
+      margin-bottom:18px;
+    }
+
+    .auth-left h1{
+      margin:0 0 10px;
+      font-size:38px;
+      line-height:1.15;
+    }
+
+    .auth-left p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:15px;
+      max-width:520px;
+    }
+
+    .feature-list{
+      display:grid;
+      gap:12px;
+      margin-top:28px;
+    }
+
+    .feature{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .feature-dot{
+      width:12px;
+      height:12px;
+      margin-top:6px;
+      border-radius:50%;
+      background:linear-gradient(180deg, var(--blue), #7fb2ff);
+      box-shadow:0 0 14px rgba(79,140,255,.45);
+      flex:0 0 12px;
+    }
+
+    .feature strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:2px;
+    }
+
+    .feature span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .auth-right{
+      padding:34px 28px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg, rgba(18,28,47,.9), rgba(12,20,34,.95));
+    }
+
+    .auth-card{
+      width:100%;
+      max-width:440px;
+    }
+
+    .brand{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .brand h2{
+      margin:0;
+      font-size:28px;
+    }
+
+    .brand p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .auth-tabs{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:0 0 22px;
+    }
+
+    .auth-tabs a{
+      text-decoration:none;
+    }
+
+    .auth-tabs button{
+      width:100%;
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      padding:12px 14px;
+      font-family:inherit;
+      font-size:14px;
+      font-weight:600;
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      transition:.18s ease;
+    }
+
+    .auth-tabs button.active{
+      background:rgba(79,140,255,.16);
+      border-color:rgba(79,140,255,.32);
+      color:#dce9ff;
+    }
+
+    .auth-tabs button:hover,
+    .google-btn:hover,
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .google-btn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding:15px 16px;
+      border:none;
+      border-radius:18px;
+      cursor:pointer;
+      font-family:inherit;
+      font-size:15px;
+      font-weight:600;
+      background:#fff;
+      color:#111827;
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+      transition:.18s ease;
+    }
+
+    .google-icon{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .auth-divider{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:18px 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:rgba(255,255,255,.1);
+    }
+
+    .field{
+      margin-bottom:16px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:7px;
+      font-size:14px;
+      font-weight:500;
+      color:#dbe7ff;
+    }
+
+    .field input{
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--panel2);
+      color:var(--text);
+      outline:none;
+      border-radius:16px;
+      padding:14px 15px;
+      font-family:inherit;
+      font-size:15px;
+      transition:.18s ease;
+    }
+
+    .field input:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(79,140,255,.14);
+    }
+
+    .hint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .check-row{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      margin:4px 0 16px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .check-row input{
+      margin-top:4px;
+      accent-color:var(--blue);
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      cursor:pointer;
+      border-radius:18px;
+      padding:15px 16px;
+      font-family:inherit;
+      font-size:15px;
+      font-weight:700;
+      color:#fff;
+      background:linear-gradient(180deg, var(--blue), var(--blue2));
+      box-shadow:0 12px 26px rgba(79,140,255,.28);
+      transition:.18s ease;
+    }
+
+    .msg{
+      margin:0 0 14px;
+      padding:13px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      text-align:center;
+      min-height:50px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .msg.success{
+      color:#d1fae5;
+      background:rgba(34,197,94,.12);
+      border-color:rgba(34,197,94,.22);
+    }
+
+    .msg.error{
+      color:#fecaca;
+      background:rgba(239,68,68,.12);
+      border-color:rgba(239,68,68,.22);
+    }
+
+    .bottom-note{
+      text-align:center;
+      margin-top:16px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .bottom-note a{
+      color:#dce9ff;
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    @media (max-width: 900px){
+      .auth-shell{
+        grid-template-columns:1fr;
+      }
+      .auth-left{
+        display:none;
+      }
+    }
+  </style>
 </head>
 <body>
-
   <div class="auth-shell">
-    <div class="auth-card">
-      
-      <h2 style="text-align: center; margin: 10px 0 8px;">สมัครสมาชิก</h2>
-      <div class="subtitle" style="text-align: center; margin-bottom: 24px; font-size: 14px;">
-        สร้างบัญชีเพื่อเริ่มต้นใช้งานระบบ
+    <div class="auth-left">
+      <div class="auth-badge">TR REMAP • Create Account</div>
+      <h1>สมัครสมาชิก<br>Engine Calculator Pro</h1>
+      <p>
+        สร้างบัญชีเพื่อเข้าใช้งานระบบคำนวณสเปครถแบบเต็มรูปแบบ
+        รองรับทั้งสมัครด้วย Google และอีเมล
+      </p>
+
+      <div class="feature-list">
+        <div class="feature">
+          <div class="feature-dot"></div>
+          <div>
+            <strong>สมัครไว</strong>
+            <span>ใช้บัญชี Google เข้าระบบได้ทันที</span>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-dot"></div>
+          <div>
+            <strong>จัดเก็บสมาชิกอัตโนมัติ</strong>
+            <span>เชื่อมกับ Firebase Authentication และ Firestore ได้สะดวก</span>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-dot"></div>
+          <div>
+            <strong>พร้อมต่อยอด</strong>
+            <span>แยก role member, pro หรือ admin ได้ภายหลัง</span>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div class="auth-tabs" style="margin-bottom: 30px;">
-        <button onclick="location.href='login.html'">เข้าสู่ระบบ</button>
-        <button class="active" onclick="location.href='register.html'">สมัครสมาชิก</button>
-      </div>
+    <div class="auth-right">
+      <div class="auth-card">
+        <div class="brand">
+          <h2>สมัครสมาชิก</h2>
+          <p>สร้างบัญชีเพื่อเริ่มต้นใช้งานระบบ</p>
+        </div>
 
-      <div class="field">
-        <label>ชื่อที่แสดง</label>
-        <input id="regDisplayName" type="text" placeholder="เช่น Tarutserway" required>
-      </div>
+        <div class="auth-tabs">
+          <a href="login.html"><button type="button">เข้าสู่ระบบ</button></a>
+          <a href="register.html"><button class="active" type="button">สมัครสมาชิก</button></a>
+        </div>
 
-      <div class="field">
-        <label>อีเมล</label>
-        <input id="regEmail" type="email" placeholder="example@mail.com" required>
-      </div>
+        <div id="authMessage" class="msg">กรอกข้อมูลให้ครบเพื่อเริ่มสมัครสมาชิก</div>
 
-      <div class="field">
-        <label>รหัสผ่าน</label>
-        <input id="regPassword" type="password" placeholder="อย่างน้อย 6 ตัวอักษร" required>
-      </div>
+        <button id="googleBtn" class="google-btn" type="button">
+          <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.651 32.657 29.24 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.053 6.053 29.277 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.053 6.053 29.277 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#4CAF50" d="M24 44c5.177 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.143 35.091 26.715 36 24 36c-5.219 0-9.617-3.318-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.793 2.238-2.231 4.166-4.084 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+          สมัคร / เข้าสู่ระบบด้วย Google
+        </button>
 
-      <div class="field" style="margin-bottom: 28px;">
-        <label>ยืนยันรหัสผ่าน</label>
-        <input id="regConfirmPassword" type="password" placeholder="กรอกรหัสผ่านอีกครั้ง" required>
-      </div>
+        <div class="auth-divider">หรือสมัครด้วยอีเมล</div>
 
-      <button class="btn success" style="width:100%; padding: 16px; font-size: 16px; border-radius: 18px;" onclick="registerMember()">
-        สร้างบัญชีผู้ใช้งาน
-      </button>
+        <form id="registerForm" novalidate>
+          <div class="field">
+            <label for="regDisplayName">ชื่อที่แสดง</label>
+            <input id="regDisplayName" type="text" placeholder="เช่น Tarutserway">
+          </div>
 
-      <div class="msg" id="authMessage" style="text-align: center; margin-top: 20px;">
-        ระบบจะพาไปหน้าหลักอัตโนมัติหลังสมัครสมาชิก
+          <div class="field">
+            <label for="regEmail">อีเมล</label>
+            <input id="regEmail" type="email" placeholder="example@mail.com">
+          </div>
+
+          <div class="field">
+            <label for="regPassword">รหัสผ่าน</label>
+            <input id="regPassword" type="password" placeholder="อย่างน้อย 6 ตัวอักษร">
+            <div class="hint">ควรตั้งรหัสผ่านที่เดายากและมีอย่างน้อย 6 ตัวอักษร</div>
+          </div>
+
+          <div class="field">
+            <label for="regConfirmPassword">ยืนยันรหัสผ่าน</label>
+            <input id="regConfirmPassword" type="password" placeholder="กรอกรหัสผ่านอีกครั้ง">
+          </div>
+
+          <label class="check-row">
+            <input id="acceptTerms" type="checkbox">
+            <span>ฉันยอมรับเงื่อนไขการใช้งานและการจัดเก็บข้อมูลสำหรับการเข้าสู่ระบบ</span>
+          </label>
+
+          <button id="registerBtn" class="btn" type="submit">สร้างบัญชีผู้ใช้งาน</button>
+        </form>
+
+        <div class="bottom-note">
+          มีบัญชีอยู่แล้ว? <a href="login.html">กลับไปหน้าเข้าสู่ระบบ</a>
+        </div>
       </div>
     </div>
   </div>
 
-  <script type="module" src="auth.js"></script>
+  <script type="module" src="./auth.js"></script>
 </body>
 </html>

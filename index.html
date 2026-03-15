@@ -2,18 +2,168 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=login.html">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TR REMAP</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>TR REMAP - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0b1220;
+      --panel:#121c2f;
+      --panel2:#0f1728;
+      --border:#263755;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --blue:#4f8cff;
+      --red:#ef4444;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      visibility:hidden;
+      font-family:'Kanit',sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--bg),var(--bg2));
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      padding:18px 20px;
+      background:rgba(18,28,47,.92);
+      border:1px solid var(--border);
+      border-radius:20px;
+      margin-bottom:20px;
+    }
+
+    .title h1{
+      margin:0;
+      font-size:28px;
+    }
+
+    .title p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .user-box{
+      padding:10px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      font-size:14px;
+      color:#dbe7ff;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      padding:12px 16px;
+      font-family:inherit;
+      font-size:14px;
+      font-weight:600;
+      color:#fff;
+      background:linear-gradient(180deg,var(--red),#dc2626);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      background:rgba(18,28,47,.92);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:20px;
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+  </style>
 </head>
 <body>
-  <div class="auth-shell">
-    <div class="auth-card">
-      <div class="brand-logo">TR REMAP</div>
-      <h2>กำลังพาไปหน้าเข้าสู่ระบบ...</h2>
-      <div class="msg">ถ้าไม่เปลี่ยนหน้าอัตโนมัติ ให้กด <a href="login.html">เข้าสู่ระบบ</a></div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>TR REMAP Dashboard</h1>
+        <p>เข้าสู่ระบบสำเร็จแล้ว</p>
+      </div>
+
+      <div class="actions">
+        <div class="user-box" id="userInfo">กำลังโหลดข้อมูลผู้ใช้...</div>
+        <button class="btn" id="logoutBtn" type="button">ออกจากระบบ</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>สถานะระบบ</h3>
+        <p>ถ้าเข้าหน้านี้ได้แบบไม่กระพริบ แปลว่า redirect loop หายแล้ว</p>
+      </div>
+
+      <div class="card">
+        <h3>สมาชิก</h3>
+        <p>ระบบจะสร้างข้อมูลลง collection members อัตโนมัติเมื่อเข้าสู่ระบบสำเร็จ</p>
+      </div>
+
+      <div class="card">
+        <h3>พร้อมต่อยอด</h3>
+        <p>จากหน้านี้คุณค่อยต่อระบบคำนวณหลักหรือ dashboard จริงได้เลย</p>
+      </div>
     </div>
   </div>
+
+  <script type="module">
+    import { auth } from "./auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+    const userInfo = document.getElementById("userInfo");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userInfo.textContent = user.displayName
+          ? `${user.displayName} (${user.email || "ไม่มีอีเมล"})`
+          : (user.email || "เข้าสู่ระบบแล้ว");
+
+        document.body.style.visibility = "visible";
+      } else {
+        window.location.replace("login.html");
+      }
+    });
+  </script>
+
+  <script type="module" src="./auth.js"></script>
 </body>
 </html>
