@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TR REMAP GPS Racing</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#182235;
+      --panel-2:#0f1b31;
+      --panel-3:#0c1628;
+      --border:#2c3d5c;
+      --text:#f8fafc;
+      --muted:#9fb0cd;
+      --blue:#4f8cff;
+      --green:#18c37e;
+      --red:#ef5b5b;
+      --yellow:#f4c95d;
+      --shadow:0 12px 28px rgba(0,0,0,.28);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(24,195,126,.08), transparent 24%),
+        linear-gradient(180deg, #08101d 0%, #0b1220 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    .container{
+      width:min(1100px, calc(100% - 24px));
+      margin:24px auto 40px;
+    }
+
+    .hero{
+      background:linear-gradient(180deg, rgba(24,34,53,.95), rgba(12,22,40,.95));
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:28px 24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(79,140,255,.12);
+      border:1px solid rgba(79,140,255,.28);
+      color:#bdd3ff;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:14px;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:34px;
+      line-height:1.15;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.7;
+      max-width:780px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin:18px 0 22px;
+      background:linear-gradient(180deg, rgba(24,34,53,.92), rgba(15,27,49,.92));
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .topbar-left{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      flex:1 1 320px;
+      min-width:0;
+    }
+
+    .user-pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text);
+      font-size:14px;
+      white-space:nowrap;
+    }
+
+    .user-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      flex:1 1 320px;
+    }
+
+    .btn{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:12px 16px;
+      font-size:14px;
+      font-weight:700;
+      transition:.18s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn.primary{
+      background:linear-gradient(180deg, #5a95ff, #3f7fff);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(79,140,255,.28);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .btn.success{
+      background:linear-gradient(180deg, #22cc86, #18c37e);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(24,195,126,.24);
+    }
+
+    .btn.danger{
+      background:linear-gradient(180deg, #ff7070, #ef5b5b);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(239,91,91,.22);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      gap:16px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(24,34,53,.96), rgba(15,27,49,.96));
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .card h3{
+      margin:0 0 14px;
+      font-size:18px;
+    }
+
+    .speed-card{
+      grid-column:span 6;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      min-height:280px;
+    }
+
+    .stats-card{
+      grid-column:span 6;
+    }
+
+    .controls-card{
+      grid-column:span 12;
+    }
+
+    .status-card{
+      grid-column:span 12;
+    }
+
+    .speed-value{
+      font-size:72px;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-2px;
+      color:#ffffff;
+      margin-top:8px;
+    }
+
+    .speed-unit{
+      margin-top:8px;
+      font-size:18px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .gps-dot{
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:var(--red);
+      box-shadow:0 0 0 6px rgba(239,91,91,.14);
+      margin-bottom:14px;
+    }
+
+    .gps-dot.active{
+      background:var(--green);
+      box-shadow:0 0 0 6px rgba(24,195,126,.14);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+
+    .stat-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:6px;
+    }
+
+    .stat-value{
+      font-size:26px;
+      font-weight:800;
+    }
+
+    .controls{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .status-text{
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14px;
+      white-space:pre-line;
+    }
+
+    .mini-note{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    @media (max-width:900px){
+      .speed-card,
+      .stats-card,
+      .controls-card,
+      .status-card{
+        grid-column:span 12;
+      }
+    }
+
+    @media (max-width:720px){
+      .container{
+        width:min(100% - 14px, 1100px);
+      }
+
+      .hero{
+        padding:22px 16px;
+      }
+
+      .hero h1{
+        font-size:27px;
+      }
+
+      .topbar{
+        padding:14px;
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .topbar-left,
+      .user-actions{
+        width:100%;
+        flex:unset;
+      }
+
+      .user-actions{
+        justify-content:stretch;
+      }
+
+      .user-actions .btn,
+      .controls .btn{
+        flex:1 1 100%;
+        width:100%;
+      }
+
+      .speed-value{
+        font-size:56px;
+      }
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">GPS RACING MODE</div>
+      <h1>GPS Speed Tracker</h1>
+      <div class="subtitle">
+        ใช้จับความเร็วจาก GPS แบบเรียลไทม์ แสดงความเร็วปัจจุบัน ความเร็วสูงสุด ระยะทาง และเวลาที่วิ่ง
+        เหมาะกับการใช้งานเบื้องต้นบนมือถือ
+      </div>
+    </section>
+
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="user-pill" id="gpsStatus">สถานะ GPS: ยังไม่เริ่ม</div>
+        <div class="user-pill" id="gpsAccuracy">ความแม่นยำ: -</div>
+      </div>
+
+      <div class="user-actions">
+        <a class="btn secondary" href="index.html">กลับหน้าเมนู</a>
+      </div>
+    </div>
+
+    <section class="grid">
+      <div class="card speed-card">
+        <div class="gps-dot" id="gpsDot"></div>
+        <div class="speed-value" id="speedValue">0</div>
+        <div class="speed-unit">km/h</div>
+      </div>
+
+      <div class="card stats-card">
+        <h3>ข้อมูลการวิ่ง</h3>
+        <div class="stats">
+          <div class="stat-box">
+            <div class="stat-label">Top Speed</div>
+            <div class="stat-value" id="topSpeed">0 km/h</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Distance</div>
+            <div class="stat-value" id="distanceValue">0.00 km</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Run Time</div>
+            <div class="stat-value" id="timeValue">00:00</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Altitude</div>
+            <div class="stat-value" id="altitudeValue">- m</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Latitude</div>
+            <div class="stat-value" id="latValue">-</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Longitude</div>
+            <div class="stat-value" id="lngValue">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card controls-card">
+        <h3>ควบคุม</h3>
+        <div class="controls">
+          <button class="btn success" onclick="startGPS()">เริ่มจับ GPS</button>
+          <button class="btn danger" onclick="stopGPS()">หยุด</button>
+          <button class="btn secondary" onclick="resetGPS()">รีเซ็ต</button>
+        </div>
+        <div class="mini-note">
+          ควรเปิดใช้งานบนมือถือและอนุญาตตำแหน่งแบบแม่นยำสูง เพื่อให้ค่าความเร็วอ่านได้ดีขึ้น
+        </div>
+      </div>
+
+      <div class="card status-card">
+        <h3>สถานะ</h3>
+        <div class="status-text" id="statusText">ระบบพร้อมใช้งาน</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let watchId = null;
+    let isTracking = false;
+    let startTime = null;
+    let timerInterval = null;
+
+    let lastLat = null;
+    let lastLng = null;
+    let totalDistanceM = 0;
+    let topSpeed = 0;
+
+    const speedValue = document.getElementById("speedValue");
+    const topSpeedEl = document.getElementById("topSpeed");
+    const distanceValue = document.getElementById("distanceValue");
+    const timeValue = document.getElementById("timeValue");
+    const altitudeValue = document.getElementById("altitudeValue");
+    const latValue = document.getElementById("latValue");
+    const lngValue = document.getElementById("lngValue");
+    const gpsStatus = document.getElementById("gpsStatus");
+    const gpsAccuracy = document.getElementById("gpsAccuracy");
+    const statusText = document.getElementById("statusText");
+    const gpsDot = document.getElementById("gpsDot");
+
+    function setStatus(text) {
+      statusText.textContent = text;
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function updateTimer() {
+      if (!startTime) return;
+      const elapsed = Date.now() - startTime;
+      timeValue.textContent = formatTime(elapsed);
+    }
+
+    function toKmH(ms) {
+      return Math.max(0, ms * 3.6);
+    }
+
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const toRad = deg => deg * Math.PI / 180;
+
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function updatePosition(position) {
+      const coords = position.coords;
+      const lat = coords.latitude;
+      const lng = coords.longitude;
+      const accuracy = coords.accuracy;
+      const altitude = coords.altitude;
+      const gpsSpeed = coords.speed;
+
+      let speedKmH = 0;
+
+      if (gpsSpeed !== null && !isNaN(gpsSpeed)) {
+        speedKmH = toKmH(gpsSpeed);
+      }
+
+      if (speedKmH > topSpeed) {
+        topSpeed = speedKmH;
+      }
+
+      if (lastLat !== null && lastLng !== null) {
+        const segment = haversineDistance(lastLat, lastLng, lat, lng);
+
+        if (segment >= 1 && segment <= 1000) {
+          totalDistanceM += segment;
+        }
+      }
+
+      lastLat = lat;
+      lastLng = lng;
+
+      speedValue.textContent = speedKmH.toFixed(1);
+      topSpeedEl.textContent = `${topSpeed.toFixed(1)} km/h`;
+      distanceValue.textContent = `${(totalDistanceM / 1000).toFixed(2)} km`;
+      altitudeValue.textContent = altitude !== null && !isNaN(altitude)
+        ? `${altitude.toFixed(1)} m`
+        : "- m";
+
+      latValue.textContent = lat.toFixed(6);
+      lngValue.textContent = lng.toFixed(6);
+
+      gpsStatus.textContent = "สถานะ GPS: กำลังจับสัญญาณ";
+      gpsAccuracy.textContent = `ความแม่นยำ: ±${accuracy.toFixed(0)} m`;
+
+      gpsDot.classList.add("active");
+
+      setStatus(
+        `จับตำแหน่งสำเร็จ\nความเร็วปัจจุบัน ${speedKmH.toFixed(1)} km/h\nระยะทางรวม ${(totalDistanceM / 1000).toFixed(2)} km`
+      );
+    }
+
+    function handleError(error) {
+      gpsDot.classList.remove("active");
+      gpsStatus.textContent = "สถานะ GPS: มีปัญหา";
+      gpsAccuracy.textContent = "ความแม่นยำ: -";
+
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          setStatus("ผู้ใช้ไม่อนุญาตให้เข้าถึงตำแหน่ง");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          setStatus("ไม่สามารถอ่านข้อมูลตำแหน่งได้");
+          break;
+        case error.TIMEOUT:
+          setStatus("หมดเวลารอการตอบกลับจาก GPS");
+          break;
+        default:
+          setStatus("เกิดข้อผิดพลาดในการอ่าน GPS");
+          break;
+      }
+    }
+
+    function startGPS() {
+      if (!navigator.geolocation) {
+        setStatus("อุปกรณ์นี้ไม่รองรับ Geolocation");
+        return;
+      }
+
+      if (isTracking) {
+        setStatus("กำลังจับ GPS อยู่แล้ว");
+        return;
+      }
+
+      isTracking = true;
+      startTime = Date.now();
+
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+      updateTimer();
+
+      gpsStatus.textContent = "สถานะ GPS: กำลังเริ่มต้น...";
+      setStatus("กำลังขอสิทธิ์และเริ่มจับ GPS");
+
+      watchId = navigator.geolocation.watchPosition(
+        updatePosition,
+        handleError,
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 10000
+        }
+      );
+    }
+
+    function stopGPS() {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+
+      isTracking = false;
+      gpsDot.classList.remove("active");
+      gpsStatus.textContent = "สถานะ GPS: หยุดแล้ว";
+      setStatus("หยุดการจับ GPS แล้ว");
+    }
+
+    function resetGPS() {
+      stopGPS();
+
+      startTime = null;
+      lastLat = null;
+      lastLng = null;
+      totalDistanceM = 0;
+      topSpeed = 0;
+
+      speedValue.textContent = "0";
+      topSpeedEl.textContent = "0 km/h";
+      distanceValue.textContent = "0.00 km";
+      timeValue.textContent = "00:00";
+      altitudeValue.textContent = "- m";
+      latValue.textContent = "-";
+      lngValue.textContent = "-";
+      gpsStatus.textContent = "สถานะ GPS: ยังไม่เริ่ม";
+      gpsAccuracy.textContent = "ความแม่นยำ: -";
+      setStatus("รีเซ็ตข้อมูลเรียบร้อย");
+    }
+  </script>
+</body>
+</html>

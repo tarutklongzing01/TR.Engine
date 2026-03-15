@@ -3,167 +3,361 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TR REMAP - Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>TR REMAP Menu</title>
   <style>
     :root{
-      --bg:#07111f;
-      --bg2:#0b1220;
-      --panel:#121c2f;
-      --panel2:#0f1728;
-      --border:#263755;
+      --bg:#0b1220;
+      --panel:#182235;
+      --panel-2:#0f1b31;
+      --panel-3:#0c1628;
+      --border:#2c3d5c;
       --text:#f8fafc;
-      --muted:#94a3b8;
+      --muted:#9fb0cd;
       --blue:#4f8cff;
-      --red:#ef4444;
+      --green:#18c37e;
+      --red:#ef5b5b;
+      --yellow:#f4c95d;
+      --shadow:0 12px 28px rgba(0,0,0,.28);
     }
 
     *{ box-sizing:border-box; }
 
     body{
       margin:0;
-      min-height:100vh;
-      visibility:hidden;
-      font-family:'Kanit',sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
       color:var(--text);
-      background:linear-gradient(180deg,var(--bg),var(--bg2));
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(24,195,126,.08), transparent 24%),
+        linear-gradient(180deg, #08101d 0%, #0b1220 100%);
+      min-height:100vh;
     }
 
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px;
+    .container{
+      width:min(1100px, calc(100% - 24px));
+      margin:24px auto 40px;
+    }
+
+    .hero{
+      background:linear-gradient(180deg, rgba(24,34,53,.95), rgba(12,22,40,.95));
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:28px 24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(79,140,255,.12);
+      border:1px solid rgba(79,140,255,.28);
+      color:#bdd3ff;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:14px;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:34px;
+      line-height:1.15;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.7;
+      max-width:760px;
     }
 
     .topbar{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:16px;
+      gap:14px;
       flex-wrap:wrap;
-      padding:18px 20px;
-      background:rgba(18,28,47,.92);
+      margin:18px 0 22px;
+      background:linear-gradient(180deg, rgba(24,34,53,.92), rgba(15,27,49,.92));
       border:1px solid var(--border);
       border-radius:20px;
-      margin-bottom:20px;
+      padding:16px;
+      box-shadow:var(--shadow);
     }
 
-    .title h1{
-      margin:0;
-      font-size:28px;
-    }
-
-    .title p{
-      margin:4px 0 0;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .actions{
+    .topbar-left{
       display:flex;
       gap:10px;
-      align-items:center;
       flex-wrap:wrap;
     }
 
-    .user-box{
+    .user-pill{
       padding:10px 14px;
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text);
       font-size:14px;
-      color:#dbe7ff;
+    }
+
+    .user-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
     .btn{
       border:none;
+      outline:none;
       cursor:pointer;
-      border-radius:14px;
+      border-radius:12px;
       padding:12px 16px;
-      font-family:inherit;
       font-size:14px;
-      font-weight:600;
-      color:#fff;
-      background:linear-gradient(180deg,var(--red),#dc2626);
+      font-weight:700;
+      transition:.18s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
     }
 
-    .grid{
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .btn.danger{
+      background:linear-gradient(180deg, #ff7070, #ef5b5b);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(239,91,91,.22);
+    }
+
+    .menu-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
       gap:16px;
     }
 
-    .card{
-      background:rgba(18,28,47,.92);
+    .menu-card{
+      background:linear-gradient(180deg, rgba(24,34,53,.96), rgba(15,27,49,.96));
       border:1px solid var(--border);
-      border-radius:20px;
+      border-radius:22px;
       padding:20px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-height:220px;
     }
 
-    .card h3{
-      margin:0 0 10px;
-      font-size:18px;
+    .menu-icon{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      background:rgba(79,140,255,.12);
+      border:1px solid rgba(79,140,255,.22);
     }
 
-    .card p{
+    .menu-card h3{
+      margin:0;
+      font-size:22px;
+    }
+
+    .menu-card p{
       margin:0;
       color:var(--muted);
       line-height:1.7;
       font-size:14px;
+      flex:1;
+    }
+
+    .menu-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+
+    .menu-link{
+      flex:1;
+      background:linear-gradient(180deg, #5a95ff, #3f7fff);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(79,140,255,.28);
+    }
+
+    .menu-link.coming{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      box-shadow:none;
+      cursor:default;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:22px;
+      padding:18px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    @media (max-width:720px){
+      .container{
+        width:min(100% - 14px, 1100px);
+      }
+
+      .hero{
+        padding:22px 16px;
+      }
+
+      .hero h1{
+        font-size:27px;
+      }
+
+      .topbar{
+        padding:14px;
+      }
+
+      .user-actions,
+      .menu-actions{
+        width:100%;
+      }
+
+      .btn,
+      .menu-link{
+        width:100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="container">
+    <section class="hero">
+      <div class="badge">Version 1.0.5</div>
+      <h1>Engine Calculator Pro</h1>
+      <div class="subtitle">
+        เลือกเครื่องมือที่ต้องการใช้งานจากเมนูด้านล่าง
+        ระบบนี้ออกแบบให้แยกแต่ละฟังก์ชันเป็นหน้าเฉพาะ เพื่อให้ใช้งานง่าย ดูสะอาด และต่อยอดในอนาคตได้สะดวก
+      </div>
+    </section>
+
     <div class="topbar">
-      <div class="title">
-        <h1>TR REMAP Dashboard</h1>
-        <p>เข้าสู่ระบบสำเร็จแล้ว</p>
+      <div class="topbar-left">
+        <div class="user-pill" id="memberStatus">สถานะ: กำลังโหลด...</div>
+        <div class="user-pill" id="memberRole">ระดับ: -</div>
       </div>
 
-      <div class="actions">
-        <div class="user-box" id="userInfo">กำลังโหลดข้อมูลผู้ใช้...</div>
-        <button class="btn" id="logoutBtn" type="button">ออกจากระบบ</button>
+      <div class="user-actions">
+        <a class="btn secondary" href="profile.html">ข้อมูลสมาชิก</a>
+        <button class="btn danger" onclick="logoutMember()">ออกจากระบบ</button>
       </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <h3>สถานะระบบ</h3>
-        <p>ถ้าเข้าหน้านี้ได้แบบไม่กระพริบ แปลว่า redirect loop หายแล้ว</p>
+    <section class="menu-grid">
+      <div class="menu-card">
+        <div class="menu-icon">🧮</div>
+        <h3>Engine Calculator</h3>
+        <p>
+          รวมสูตรคำนวณสำหรับงานเครื่อง เช่น CC, Static CR, Dynamic CR, Rod Ratio,
+          Piston Speed, Safe RPM, CFM, Ring Gap และหัวฉีด
+        </p>
+        <div class="menu-actions">
+          <a class="btn menu-link" href="engine-calculator.html">เข้าใช้งาน</a>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>สมาชิก</h3>
-        <p>ระบบจะสร้างข้อมูลลง collection members อัตโนมัติเมื่อเข้าสู่ระบบสำเร็จ</p>
+      <div class="menu-card">
+        <div class="menu-icon">📍</div>
+        <h3>GPS Racing</h3>
+        <p>
+          สำหรับจับความเร็ว ระยะทาง เวลา และข้อมูลวิ่งแบบรถแข่ง
+          รองรับการต่อยอดเป็น 0-100, Top Speed และบันทึกสถิติ
+        </p>
+        <div class="menu-actions">
+          <a class="btn menu-link" href="gps.html">เข้าใช้งาน</a>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>พร้อมต่อยอด</h3>
-        <p>จากหน้านี้คุณค่อยต่อระบบคำนวณหลักหรือ dashboard จริงได้เลย</p>
+      <div class="menu-card">
+        <div class="menu-icon">🛠️</div>
+        <h3>Tools อื่น ๆ</h3>
+        <p>
+          พื้นที่สำหรับเพิ่มเครื่องมือใหม่ในอนาคต เช่น Fuel Calculator,
+          Gear Ratio, AFR Helper หรือระบบบันทึกสเปครถ
+        </p>
+        <div class="menu-actions">
+          <div class="btn menu-link coming">เร็ว ๆ นี้</div>
+        </div>
       </div>
+    </section>
+
+    <div class="footer">
+      Designed by Tarutserway
     </div>
   </div>
 
   <script type="module">
-    import { auth } from "./auth.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
 
-    const userInfo = document.getElementById("userInfo");
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userInfo.textContent = user.displayName
-          ? `${user.displayName} (${user.email || "ไม่มีอีเมล"})`
-          : (user.email || "เข้าสู่ระบบแล้ว");
+    const memberStatus = document.getElementById("memberStatus");
+    const memberRole = document.getElementById("memberRole");
 
-        document.body.style.visibility = "visible";
-      } else {
-        window.location.replace("login.html");
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      memberStatus.textContent = `สถานะ: ${user.email || "เข้าสู่ระบบแล้ว"}`;
+
+      try {
+        const ref = doc(db, "members", user.uid);
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+          const data = snap.data();
+          memberRole.textContent = `ระดับ: ${data.role || "member"}`;
+        } else {
+          memberRole.textContent = "ระดับ: member";
+        }
+      } catch (err) {
+        memberRole.textContent = "ระดับ: member";
       }
     });
-  </script>
 
-  <script type="module" src="./auth.js"></script>
+    window.logoutMember = async function () {
+      await signOut(auth);
+      window.location.href = "login.html";
+    };
+  </script>
 </body>
 </html>
