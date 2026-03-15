@@ -20,7 +20,9 @@
       --shadow:0 12px 28px rgba(0,0,0,.28);
     }
 
-    *{ box-sizing:border-box; }
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
@@ -189,11 +191,11 @@
       min-height:280px;
     }
 
-    .stats-card{
+    .controls-card{
       grid-column:span 6;
     }
 
-    .controls-card{
+    .stats-card{
       grid-column:span 12;
     }
 
@@ -233,7 +235,7 @@
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(2, 1fr);
+      grid-template-columns:repeat(3, 1fr);
       gap:12px;
     }
 
@@ -261,6 +263,10 @@
       flex-wrap:wrap;
     }
 
+    .controls .btn{
+      flex:1 1 180px;
+    }
+
     .status-text{
       color:var(--muted);
       line-height:1.8;
@@ -277,10 +283,14 @@
 
     @media (max-width:900px){
       .speed-card,
-      .stats-card,
       .controls-card,
+      .stats-card,
       .status-card{
         grid-column:span 12;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2, 1fr);
       }
     }
 
@@ -358,6 +368,18 @@
         <div class="speed-unit">km/h</div>
       </div>
 
+      <div class="card controls-card">
+        <h3>ควบคุม</h3>
+        <div class="controls">
+          <button class="btn success" onclick="startGPS()">เริ่มจับ GPS</button>
+          <button class="btn danger" onclick="stopGPS()">หยุด</button>
+          <button class="btn secondary" onclick="resetGPS()">รีเซ็ต</button>
+        </div>
+        <div class="mini-note">
+          ควรเปิดใช้งานบนมือถือและอนุญาตตำแหน่งแบบแม่นยำสูง เพื่อให้ค่าความเร็วอ่านได้ดีขึ้น
+        </div>
+      </div>
+
       <div class="card stats-card">
         <h3>ข้อมูลการวิ่ง</h3>
         <div class="stats">
@@ -385,18 +407,6 @@
             <div class="stat-label">Longitude</div>
             <div class="stat-value" id="lngValue">-</div>
           </div>
-        </div>
-      </div>
-
-      <div class="card controls-card">
-        <h3>ควบคุม</h3>
-        <div class="controls">
-          <button class="btn success" onclick="startGPS()">เริ่มจับ GPS</button>
-          <button class="btn danger" onclick="stopGPS()">หยุด</button>
-          <button class="btn secondary" onclick="resetGPS()">รีเซ็ต</button>
-        </div>
-        <div class="mini-note">
-          ควรเปิดใช้งานบนมือถือและอนุญาตตำแหน่งแบบแม่นยำสูง เพื่อให้ค่าความเร็วอ่านได้ดีขึ้น
         </div>
       </div>
 
@@ -512,7 +522,9 @@
       gpsDot.classList.add("active");
 
       setStatus(
-        `จับตำแหน่งสำเร็จ\nความเร็วปัจจุบัน ${speedKmH.toFixed(1)} km/h\nระยะทางรวม ${(totalDistanceM / 1000).toFixed(2)} km`
+        `จับตำแหน่งสำเร็จ
+ความเร็วปัจจุบัน ${speedKmH.toFixed(1)} km/h
+ระยะทางรวม ${(totalDistanceM / 1000).toFixed(2)} km`
       );
     }
 
