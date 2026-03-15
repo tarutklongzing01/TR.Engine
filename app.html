@@ -4,25 +4,343 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TR REMAP Engine Calculator</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#182235;
+      --panel-2:#0f1b31;
+      --panel-3:#0c1628;
+      --border:#2c3d5c;
+      --text:#f8fafc;
+      --muted:#9fb0cd;
+      --blue:#4f8cff;
+      --green:#18c37e;
+      --red:#ef5b5b;
+      --yellow:#f4c95d;
+      --shadow:0 12px 28px rgba(0,0,0,.28);
+      --radius:20px;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(24,195,126,.08), transparent 24%),
+        linear-gradient(180deg, #08101d 0%, #0b1220 100%);
+      color:var(--text);
+    }
+
+    .container{
+      width:min(1100px, calc(100% - 24px));
+      margin:24px auto 40px;
+    }
+
+    .hero{
+      background:linear-gradient(180deg, rgba(24,34,53,.95), rgba(12,22,40,.95));
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:28px 24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(79,140,255,.12);
+      border:1px solid rgba(79,140,255,.28);
+      color:#bdd3ff;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:14px;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:34px;
+      line-height:1.15;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.7;
+      max-width:780px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin:18px 0 22px;
+      background:linear-gradient(180deg, rgba(24,34,53,.92), rgba(15,27,49,.92));
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .topbar-left{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .user-pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .user-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:12px 16px;
+      font-size:14px;
+      font-weight:700;
+      transition:.18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn.primary{
+      background:linear-gradient(180deg, #5a95ff, #3f7fff);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(79,140,255,.28);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .btn.danger{
+      background:linear-gradient(180deg, #ff7070, #ef5b5b);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(239,91,91,.22);
+    }
+
+    .accordion-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .accordion-item{
+      background:linear-gradient(180deg, rgba(24,34,53,.96), rgba(15,27,49,.96));
+      border:1px solid var(--border);
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .accordion-item summary{
+      list-style:none;
+      cursor:pointer;
+      padding:18px 20px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      position:relative;
+      user-select:none;
+    }
+
+    .accordion-item summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .accordion-item summary span{
+      font-size:18px;
+      font-weight:700;
+      color:var(--text);
+      padding-right:42px;
+    }
+
+    .accordion-item summary small{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
+      padding-right:42px;
+    }
+
+    .accordion-item summary::after{
+      content:"+";
+      position:absolute;
+      right:16px;
+      top:50%;
+      transform:translateY(-50%);
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:700;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      transition:.2s ease;
+    }
+
+    .accordion-item[open] summary::after{
+      content:"−";
+      background:rgba(79,140,255,.15);
+      color:#b8ceff;
+    }
+
+    .accordion-body{
+      padding:0 20px 20px;
+      border-top:1px solid rgba(255,255,255,.05);
+    }
+
+    .fields{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:7px;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .field input{
+      width:100%;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--panel-3);
+      color:var(--text);
+      outline:none;
+      font-size:15px;
+    }
+
+    .field input:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(79,140,255,.16);
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .result{
+      margin-top:16px;
+      padding:15px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .result .main{
+      font-size:18px;
+      font-weight:800;
+      color:var(--text);
+    }
+
+    .result .muted{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:22px;
+      padding:18px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    @media (max-width:720px){
+      .container{
+        width:min(100% - 14px, 1100px);
+      }
+
+      .hero{
+        padding:22px 16px;
+      }
+
+      .hero h1{
+        font-size:27px;
+      }
+
+      .topbar{
+        padding:14px;
+      }
+
+      .accordion-item summary{
+        padding:16px;
+      }
+
+      .accordion-body{
+        padding:0 16px 16px;
+      }
+
+      .btn{
+        width:100%;
+      }
+
+      .user-actions{
+        width:100%;
+      }
+
+      .user-actions .btn{
+        flex:1 1 100%;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <section class="hero">
-      <div class="badge">Version 1.0.1</div>
-      <div class="brand-wrap">
-        
-        
-      </div>
+      <div class="badge">Version 1.0.3</div>
       <h1>Engine Calculator Pro</h1>
-      <div class="subtitle">เครื่องมือคำนวณสเปครถแต่ง/รถใช้งานสำหรับช่างและสายโมเครื่อง ใช้งานง่าย กดคำนวณได้ทันที</div>
+      <div class="subtitle">
+        เครื่องมือคำนวณสเปครถแต่ง/รถใช้งานสำหรับช่างและสายโมเครื่อง
+        ใช้งานง่าย แสดงเป็นหัวข้อเรียงกัน กดเปิดสูตรที่ต้องการแล้วคำนวณได้ทันที
+      </div>
     </section>
 
     <div class="topbar">
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div class="topbar-left">
         <div class="user-pill" id="memberStatus">สถานะ: กำลังโหลด...</div>
         <div class="user-pill" id="memberRole">สิทธิ์: -</div>
       </div>
+
       <div class="user-actions">
         <button class="btn secondary" onclick="fillDemo()">ใส่ค่าตัวอย่าง</button>
         <button class="btn secondary" onclick="resetAll()">ล้างค่าทั้งหมด</button>
@@ -30,148 +348,234 @@
       </div>
     </div>
 
-    <section class="grid">
-      <div class="card">
-        <h3>คำนวณปริมาตรกระบอกสูบ (Engine CC)</h3>
-        <div class="desc">ใช้หาความจุเครื่องจริงหลังเปลี่ยนขนาดลูกหรือยืดชัก</div>
-        <div class="fields">
-          <div class="field"><label>Bore (mm)</label><input id="cc_bore" type="number" step="0.01" placeholder="61.0"></div>
-          <div class="field"><label>Stroke (mm)</label><input id="cc_stroke" type="number" step="0.01" placeholder="57.9"></div>
-        </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcCC()">คำนวณ</button>
-        </div>
-        <div class="result" id="cc_result">
-          <div class="main">Engine = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+    <section class="accordion-list">
 
-      <div class="card">
-        <h3>อัตราส่วนการอัด (Static CR)</h3>
-        <div class="desc">ใช้ประเมินกำลังอัดพื้นฐาน เพื่อเลือกน้ำมันและเช็กความเสี่ยงเขก</div>
-        <div class="fields">
-          <div class="field"><label>Engine CC</label><input id="scr_engine" type="number" step="0.01" placeholder="169.4"></div>
-          <div class="field"><label>Chamber CC @TDC</label><input id="scr_chamber" type="number" step="0.01" placeholder="15.5"></div>
+      <details class="accordion-item" open>
+        <summary>
+          <span>คำนวณปริมาตรกระบอกสูบ (Engine CC)</span>
+          <small>ใช้หาความจุเครื่องจริงหลังเปลี่ยนขนาดลูกหรือยืดชัก</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Bore (mm)</label>
+              <input id="cc_bore" type="number" step="0.01" placeholder="61.0">
+            </div>
+            <div class="field">
+              <label>Stroke (mm)</label>
+              <input id="cc_stroke" type="number" step="0.01" placeholder="57.9">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcCC()">คำนวณ</button>
+          </div>
+          <div class="result" id="cc_result">
+            <div class="main">Engine = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcSCR()">คำนวณ</button>
-        </div>
-        <div class="result" id="scr_result">
-          <div class="main">Static CR = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>อัตราส่วนการอัดแท้จริง (Dynamic CR)</h3>
-        <div class="desc">ประเมินกำลังอัดตอนเครื่องทำงานจริง โดยอิงการปิดวาล์วไอดี</div>
-        <div class="fields">
-          <div class="field"><label>Static CR</label><input id="dcr_scr" type="number" step="0.01" placeholder="11.93"></div>
-          <div class="field"><label>IVC (°ABDC)</label><input id="dcr_ivc" type="number" step="0.1" placeholder="50"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>อัตราส่วนการอัด (Static CR)</span>
+          <small>ใช้ประเมินกำลังอัดพื้นฐาน เพื่อเลือกน้ำมันและเช็กความเสี่ยงเขก</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Engine CC</label>
+              <input id="scr_engine" type="number" step="0.01" placeholder="169.4">
+            </div>
+            <div class="field">
+              <label>Chamber CC @TDC</label>
+              <input id="scr_chamber" type="number" step="0.01" placeholder="15.5">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcSCR()">คำนวณ</button>
+          </div>
+          <div class="result" id="scr_result">
+            <div class="main">Static CR = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcDCR()">คำนวณ</button>
-        </div>
-        <div class="result" id="dcr_result">
-          <div class="main">Dynamic CR = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>Rod Ratio</h3>
-        <div class="desc">เช็กบุคลิกเครื่องและความสมดุลระหว่างก้านสูบกับระยะชัก</div>
-        <div class="fields">
-          <div class="field"><label>Rod Length (mm)</label><input id="rod_length" type="number" step="0.01" placeholder="97"></div>
-          <div class="field"><label>Stroke (mm)</label><input id="rod_stroke" type="number" step="0.01" placeholder="57.9"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>อัตราส่วนการอัดแท้จริง (Dynamic CR)</span>
+          <small>ประเมินกำลังอัดตอนเครื่องทำงานจริง โดยอิงการปิดวาล์วไอดี</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Static CR</label>
+              <input id="dcr_scr" type="number" step="0.01" placeholder="11.93">
+            </div>
+            <div class="field">
+              <label>IVC (°ABDC)</label>
+              <input id="dcr_ivc" type="number" step="0.1" placeholder="50">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcDCR()">คำนวณ</button>
+          </div>
+          <div class="result" id="dcr_result">
+            <div class="main">Dynamic CR = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcRodRatio()">คำนวณ</button>
-        </div>
-        <div class="result" id="rod_result">
-          <div class="main">Rod Ratio = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>Piston Speed</h3>
-        <div class="desc">ใช้เช็กภาระลูกสูบ/ก้านสูบเมื่อวิ่งที่รอบต่าง ๆ</div>
-        <div class="fields">
-          <div class="field"><label>Stroke (mm)</label><input id="ps_stroke" type="number" step="0.01" placeholder="57.9"></div>
-          <div class="field"><label>RPM</label><input id="ps_rpm" type="number" step="1" placeholder="10000"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>Rod Ratio</span>
+          <small>เช็กบุคลิกเครื่องและความสมดุลระหว่างก้านสูบกับระยะชัก</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Rod Length (mm)</label>
+              <input id="rod_length" type="number" step="0.01" placeholder="97">
+            </div>
+            <div class="field">
+              <label>Stroke (mm)</label>
+              <input id="rod_stroke" type="number" step="0.01" placeholder="57.9">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcRodRatio()">คำนวณ</button>
+          </div>
+          <div class="result" id="rod_result">
+            <div class="main">Rod Ratio = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcPistonSpeed()">คำนวณ</button>
-        </div>
-        <div class="result" id="ps_result">
-          <div class="main">Piston Speed = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>Safe RPM</h3>
-        <div class="desc">หารอบสูงสุดเชิงทฤษฎีจาก Piston Speed เป้าหมาย</div>
-        <div class="fields">
-          <div class="field"><label>Piston Speed Target (m/s)</label><input id="rpm_speed" type="number" step="0.1" placeholder="24"></div>
-          <div class="field"><label>Stroke (mm)</label><input id="rpm_stroke" type="number" step="0.01" placeholder="57.9"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>Piston Speed</span>
+          <small>ใช้เช็กภาระลูกสูบ/ก้านสูบเมื่อวิ่งที่รอบต่าง ๆ</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Stroke (mm)</label>
+              <input id="ps_stroke" type="number" step="0.01" placeholder="57.9">
+            </div>
+            <div class="field">
+              <label>RPM</label>
+              <input id="ps_rpm" type="number" step="1" placeholder="10000">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcPistonSpeed()">คำนวณ</button>
+          </div>
+          <div class="result" id="ps_result">
+            <div class="main">Piston Speed = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcSafeRPM()">คำนวณ</button>
-        </div>
-        <div class="result" id="rpm_result">
-          <div class="main">Safe Limit = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>CFM ความต้องการอากาศ</h3>
-        <div class="desc">ช่วยกะเรือนลิ้น คาร์บู หรือพอร์ตฝาว่าใหญ่ประมาณไหนถึงพอดี</div>
-        <div class="fields">
-          <div class="field"><label>Engine CC</label><input id="cfm_engine" type="number" step="0.01" placeholder="169.4"></div>
-          <div class="field"><label>RPM</label><input id="cfm_rpm" type="number" step="1" placeholder="10000"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>Safe RPM</span>
+          <small>หารอบสูงสุดเชิงทฤษฎีจาก Piston Speed เป้าหมาย</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Piston Speed Target (m/s)</label>
+              <input id="rpm_speed" type="number" step="0.1" placeholder="24">
+            </div>
+            <div class="field">
+              <label>Stroke (mm)</label>
+              <input id="rpm_stroke" type="number" step="0.01" placeholder="57.9">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcSafeRPM()">คำนวณ</button>
+          </div>
+          <div class="result" id="rpm_result">
+            <div class="main">Safe Limit = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcCFM()">คำนวณ</button>
-        </div>
-        <div class="result" id="cfm_result">
-          <div class="main">CFM = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>Ring Gap</h3>
-        <div class="desc">ช่วยกะระยะปากแหวนเบื้องต้นสำหรับการใช้งานทั่วไป/กึ่ง performance</div>
-        <div class="fields">
-          <div class="field"><label>Bore (mm)</label><input id="ring_bore" type="number" step="0.01" placeholder="61"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>CFM ความต้องการอากาศ</span>
+          <small>ช่วยกะเรือนลิ้น คาร์บู หรือพอร์ตฝาว่าใหญ่ประมาณไหนถึงพอดี</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Engine CC</label>
+              <input id="cfm_engine" type="number" step="0.01" placeholder="169.4">
+            </div>
+            <div class="field">
+              <label>RPM</label>
+              <input id="cfm_rpm" type="number" step="1" placeholder="10000">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcCFM()">คำนวณ</button>
+          </div>
+          <div class="result" id="cfm_result">
+            <div class="main">CFM = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcRingGap()">คำนวณ</button>
-        </div>
-        <div class="result" id="ring_result">
-          <div class="main">Ring Gap = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h3>Injector Flow Rate</h3>
-        <div class="desc">คำนวณขนาดหัวฉีดแบบประมาณการจากความจุเครื่องสำหรับรถสูบเดียว</div>
-        <div class="fields">
-          <div class="field"><label>Engine CC</label><input id="inj_engine" type="number" step="0.01" placeholder="169.4"></div>
+      <details class="accordion-item">
+        <summary>
+          <span>Ring Gap</span>
+          <small>ช่วยกะระยะปากแหวนเบื้องต้นสำหรับการใช้งานทั่วไป/กึ่ง performance</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Bore (mm)</label>
+              <input id="ring_bore" type="number" step="0.01" placeholder="61">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcRingGap()">คำนวณ</button>
+          </div>
+          <div class="result" id="ring_result">
+            <div class="main">Ring Gap = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" onclick="calcInjector()">คำนวณ</button>
+      </details>
+
+      <details class="accordion-item">
+        <summary>
+          <span>Injector Flow Rate</span>
+          <small>คำนวณขนาดหัวฉีดแบบประมาณการจากความจุเครื่องสำหรับรถสูบเดียว</small>
+        </summary>
+        <div class="accordion-body">
+          <div class="fields">
+            <div class="field">
+              <label>Engine CC</label>
+              <input id="inj_engine" type="number" step="0.01" placeholder="169.4">
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="calcInjector()">คำนวณ</button>
+          </div>
+          <div class="result" id="inj_result">
+            <div class="main">Injector = -</div>
+            <div class="muted">รอคำนวณ</div>
+          </div>
         </div>
-        <div class="result" id="inj_result">
-          <div class="main">Injector = -</div>
-          <div class="muted">รอคำนวณ</div>
-        </div>
-      </div>
+      </details>
+
     </section>
 
     <div class="footer">
@@ -179,6 +583,20 @@
       Designed by Tarutserway
     </div>
   </div>
+
+  <script>
+    const accordions = document.querySelectorAll('.accordion-item');
+
+    accordions.forEach(item => {
+      item.addEventListener('toggle', function () {
+        if (this.open) {
+          accordions.forEach(other => {
+            if (other !== this) other.removeAttribute('open');
+          });
+        }
+      });
+    });
+  </script>
 
   <script type="module" src="app.js"></script>
 </body>
