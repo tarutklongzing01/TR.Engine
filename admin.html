@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TR REMAP Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0b1220;
+      --panel:#121c2f;
+      --panel2:#0f1728;
+      --border:#263755;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --blue:#4f8cff;
+      --blue2:#3b82f6;
+      --green:#22c55e;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Kanit',sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.08), transparent 22%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      visibility:hidden;
+    }
+
+    .wrap{
+      max-width:1300px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      padding:18px 20px;
+      border:1px solid var(--border);
+      background:rgba(18,28,47,.92);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .topbar h1{
+      margin:0;
+      font-size:30px;
+    }
+
+    .topbar p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .pill,.btn{
+      border:none;
+      border-radius:16px;
+      padding:12px 15px;
+      font-family:inherit;
+      font-size:14px;
+    }
+
+    .pill{
+      background:rgba(255,255,255,.05);
+      color:#dbe7ff;
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .btn{
+      cursor:pointer;
+      font-weight:600;
+      color:#fff;
+      background:linear-gradient(180deg,var(--blue),var(--blue2));
+      box-shadow:0 12px 26px rgba(79,140,255,.28);
+    }
+
+    .btn.red{
+      background:linear-gradient(180deg,var(--red),#dc2626);
+      box-shadow:none;
+    }
+
+    .btn.gray{
+      background:rgba(255,255,255,.08);
+      box-shadow:none;
+    }
+
+    .notice{
+      margin-bottom:16px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.04);
+      color:#dbeafe;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .notice.hidden{display:none}
+    .notice.success{
+      background:rgba(34,197,94,.12);
+      border-color:rgba(34,197,94,.22);
+      color:#d1fae5;
+    }
+    .notice.error{
+      background:rgba(239,68,68,.12);
+      border-color:rgba(239,68,68,.22);
+      color:#fecaca;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background:rgba(18,28,47,.92);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .stat-value{
+      font-size:32px;
+      font-weight:700;
+      line-height:1;
+      margin-bottom:8px;
+    }
+
+    .stat-foot{
+      font-size:12px;
+      color:#cfe0ff;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.4fr .9fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .section-head h3{
+      margin:0;
+      font-size:20px;
+    }
+
+    .section-head span{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:900px;
+    }
+
+    th,td{
+      padding:14px 14px;
+      text-align:left;
+      font-size:14px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    th{
+      color:#dbe7ff;
+      background:rgba(255,255,255,.03);
+      font-weight:600;
+    }
+
+    td{
+      color:#eff6ff;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:600;
+      border:1px solid transparent;
+    }
+
+    .tag.green{background:rgba(34,197,94,.12);color:#d1fae5;border-color:rgba(34,197,94,.22)}
+    .tag.yellow{background:rgba(245,158,11,.12);color:#fde68a;border-color:rgba(245,158,11,.22)}
+    .tag.red{background:rgba(239,68,68,.12);color:#fecaca;border-color:rgba(239,68,68,.22)}
+    .tag.blue{background:rgba(79,140,255,.12);color:#dbeafe;border-color:rgba(79,140,255,.22)}
+    .tag.gray{background:rgba(255,255,255,.08);color:#e5e7eb;border-color:rgba(255,255,255,.12)}
+
+    .list{
+      display:grid;
+      gap:12px;
+    }
+
+    .list-item{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .list-item strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:14px;
+    }
+
+    .list-item p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .field{
+      display:grid;
+      gap:7px;
+    }
+
+    .field.full{
+      grid-column:1 / -1;
+    }
+
+    label{
+      font-size:13px;
+      color:#dbe7ff;
+      font-weight:500;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--panel2);
+      color:var(--text);
+      outline:none;
+      border-radius:16px;
+      padding:13px 14px;
+      font-family:inherit;
+      font-size:14px;
+    }
+
+    textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+
+    input:focus,select:focus,textarea:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(79,140,255,.14);
+    }
+
+    .form-actions{
+      display:flex;
+      gap:10px;
+      margin-top:14px;
+      flex-wrap:wrap;
+    }
+
+    .empty{
+      padding:22px;
+      border-radius:18px;
+      border:1px dashed rgba(255,255,255,.12);
+      color:var(--muted);
+      text-align:center;
+    }
+
+    @media (max-width:1100px){
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:760px){
+      .wrap{padding:16px}
+      .stats{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="noticeBox" class="notice hidden"></div>
+
+    <div class="topbar">
+      <div>
+        <h1>TR REMAP Admin</h1>
+        <p>จัดการสมาชิกแบบง่าย: ดูรายชื่อ เพิ่ม แก้ไข ลบ</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="pill" id="adminInfoBtn" type="button">กำลังโหลดแอดมิน...</button>
+        <button class="btn" id="refreshBtn" type="button">รีเฟรชข้อมูล</button>
+        <button class="btn red" id="logoutBtn" type="button">ออกจากระบบ</button>
+      </div>
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="stat-label">สมาชิกทั้งหมด</div>
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-foot">จำนวนสมาชิกในระบบ</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">แพ็กเกจ PRO / PRO+</div>
+        <div class="stat-value" id="statPro">0</div>
+        <div class="stat-foot">นับจาก package</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">สถานะ active</div>
+        <div class="stat-value" id="statActive">0</div>
+        <div class="stat-foot">บัญชีที่ใช้งานอยู่</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">สถานะ pending</div>
+        <div class="stat-value" id="statPending">0</div>
+        <div class="stat-foot">รอตรวจสอบ</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h3>รายชื่อสมาชิก</h3>
+            <span>ดึงจาก Firestore collection: members</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <input id="searchInput" type="text" placeholder="ค้นหาจากชื่อ อีเมล role หรือ package">
+          <select id="filterStatus">
+            <option value="all">ทุกสถานะ</option>
+            <option value="active">active</option>
+            <option value="pending">pending</option>
+            <option value="expired">expired</option>
+            <option value="suspended">suspended</option>
+          </select>
+          <select id="filterPackage">
+            <option value="all">ทุกแพ็กเกจ</option>
+            <option value="FREE">FREE</option>
+            <option value="TRIAL">TRIAL</option>
+            <option value="PRO">PRO</option>
+            <option value="PRO+">PRO+</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ชื่อ</th>
+                <th>อีเมล</th>
+                <th>Role</th>
+                <th>แพ็กเกจ</th>
+                <th>สถานะ</th>
+                <th>หมดอายุ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="membersTableBody">
+              <tr><td colspan="7">กำลังโหลดข้อมูล...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h3>สรุปย่อ</h3>
+            <span>ภาพรวมจากข้อมูลจริง</span>
+          </div>
+        </div>
+
+        <div class="list">
+          <div class="list-item">
+            <div>
+              <strong>รอตรวจสอบ</strong>
+              <p>สมาชิกที่มีสถานะ pending</p>
+            </div>
+            <span class="tag yellow" id="pendingBadge">0</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <strong>ใกล้หมดอายุ</strong>
+              <p>หมดอายุภายใน 7 วัน</p>
+            </div>
+            <span class="tag red" id="expiringBadge">0</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <strong>แอดมินทั้งหมด</strong>
+              <p>สมาชิกที่มี role = admin</p>
+            </div>
+            <span class="tag blue" id="adminBadge">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h3>เพิ่ม / แก้ไขสมาชิก</h3>
+            <span>เลือกจากตารางเพื่อแก้ไข หรือกรอกใหม่เพื่อเพิ่มสมาชิก</span>
+          </div>
+        </div>
+
+        <form id="memberForm">
+          <input type="hidden" id="memberUid">
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="displayName">ชื่อสมาชิก</label>
+              <input id="displayName" type="text" placeholder="เช่น ดีเจรุตแหล่มเลย" required>
+            </div>
+
+            <div class="field">
+              <label for="email">อีเมล</label>
+              <input id="email" type="email" placeholder="example@mail.com" required>
+            </div>
+
+            <div class="field">
+              <label for="role">Role</label>
+              <select id="role">
+                <option value="member">member</option>
+                <option value="admin">admin</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="package">แพ็กเกจ</label>
+              <select id="package">
+                <option value="FREE">FREE</option>
+                <option value="TRIAL">TRIAL</option>
+                <option value="PRO">PRO</option>
+                <option value="PRO+">PRO+</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="status">สถานะบัญชี</label>
+              <select id="status">
+                <option value="active">active</option>
+                <option value="pending">pending</option>
+                <option value="expired">expired</option>
+                <option value="suspended">suspended</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="expiresAt">วันหมดอายุ</label>
+              <input id="expiresAt" type="date">
+            </div>
+
+            <div class="field full">
+              <label for="notes">หมายเหตุ</label>
+              <textarea id="notes" placeholder="บันทึกข้อมูลภายใน"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn" id="saveBtn" type="submit">บันทึกข้อมูล</button>
+            <button class="pill" id="resetBtn" type="button">ล้างฟอร์ม</button>
+            <button class="btn gray" id="deleteBtn" type="button">ลบสมาชิกที่เลือก</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h3>สรุปแพ็กเกจ</h3>
+            <span>นับจากสมาชิกจริง</span>
+          </div>
+        </div>
+
+        <div class="list">
+          <div class="list-item">
+            <div>
+              <strong>FREE</strong>
+              <p>สมาชิกทั่วไป</p>
+            </div>
+            <span class="tag gray" id="pkgFree">0</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <strong>TRIAL</strong>
+              <p>ทดลองใช้งาน</p>
+            </div>
+            <span class="tag yellow" id="pkgTrial">0</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <strong>PRO</strong>
+              <p>ใช้งานหลัก</p>
+            </div>
+            <span class="tag blue" id="pkgPro">0</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <strong>PRO+</strong>
+              <p>แพ็กเกจขั้นสูง</p>
+            </div>
+            <span class="tag green" id="pkgProPlus">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./auth.js";
+    import {
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import {
+      collection,
+      doc,
+      getDoc,
+      getDocs,
+      setDoc,
+      deleteDoc,
+      serverTimestamp,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+    const $ = (id) => document.getElementById(id);
+
+    const noticeBox = $("noticeBox");
+    const adminInfoBtn = $("adminInfoBtn");
+    const membersTableBody = $("membersTableBody");
+    const memberForm = $("memberForm");
+    const searchInput = $("searchInput");
+    const filterStatus = $("filterStatus");
+    const filterPackage = $("filterPackage");
+
+    let currentAdmin = null;
+    let allMembers = [];
+
+    function showNotice(message, type = "") {
+      noticeBox.textContent = message;
+      noticeBox.className = `notice ${type}`.trim();
+    }
+
+    function hideNotice() {
+      noticeBox.className = "notice hidden";
+      noticeBox.textContent = "";
+    }
+
+    function fmtDate(dateStr) {
+      if (!dateStr) return "-";
+      const date = new Date(dateStr);
+      if (Number.isNaN(date.getTime())) return dateStr;
+      return date.toLocaleDateString("th-TH");
+    }
+
+    function todayInputValue() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const local = new Date(now.getTime() - offset * 60000);
+      return local.toISOString().slice(0, 10);
+    }
+
+    function addDays(dateString, days) {
+      const d = dateString ? new Date(dateString) : new Date();
+      d.setDate(d.getDate() + days);
+      const offset = d.getTimezoneOffset();
+      const local = new Date(d.getTime() - offset * 60000);
+      return local.toISOString().slice(0, 10);
+    }
+
+    function statusTag(status) {
+      const s = (status || "").toLowerCase();
+      if (s === "active") return '<span class="tag green">active</span>';
+      if (s === "pending") return '<span class="tag yellow">pending</span>';
+      if (s === "expired") return '<span class="tag red">expired</span>';
+      if (s === "suspended") return '<span class="tag red">suspended</span>';
+      return `<span class="tag gray">${s || "-"}</span>`;
+    }
+
+    function packageTag(pkg) {
+      const p = (pkg || "FREE").toUpperCase();
+      if (p === "PRO+") return '<span class="tag green">PRO+</span>';
+      if (p === "PRO") return '<span class="tag blue">PRO</span>';
+      if (p === "TRIAL") return '<span class="tag yellow">TRIAL</span>';
+      return '<span class="tag gray">FREE</span>';
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function resetForm() {
+      memberForm.reset();
+      $("memberUid").value = "";
+      $("status").value = "active";
+      $("package").value = "FREE";
+      $("role").value = "member";
+      $("expiresAt").value = addDays(todayInputValue(), 30);
+    }
+
+    function fillForm(member) {
+      $("memberUid").value = member.uid || "";
+      $("displayName").value = member.displayName || "";
+      $("email").value = member.email || "";
+      $("role").value = member.role || "member";
+      $("package").value = member.package || "FREE";
+      $("status").value = member.status || "active";
+      $("expiresAt").value = member.expiresAt || "";
+      $("notes").value = member.notes || "";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+
+    function filteredMembers() {
+      const q = (searchInput.value || "").trim().toLowerCase();
+      const st = filterStatus.value;
+      const pkg = filterPackage.value;
+
+      return allMembers.filter((m) => {
+        const text = `${m.displayName || ""} ${m.email || ""} ${m.package || ""} ${m.role || ""}`.toLowerCase();
+        const matchSearch = !q || text.includes(q);
+        const matchStatus = st === "all" || (m.status || "active") === st;
+        const matchPackage = pkg === "all" || (m.package || "FREE") === pkg;
+        return matchSearch && matchStatus && matchPackage;
+      });
+    }
+
+    function renderTable() {
+      const items = filteredMembers();
+
+      if (!items.length) {
+        membersTableBody.innerHTML = '<tr><td colspan="7"><div class="empty">ไม่พบข้อมูลสมาชิก</div></td></tr>';
+        return;
+      }
+
+      membersTableBody.innerHTML = items.map((m) => `
+        <tr>
+          <td>${escapeHtml(m.displayName || "-")}</td>
+          <td>${escapeHtml(m.email || "-")}</td>
+          <td>${escapeHtml(m.role || "member")}</td>
+          <td>${packageTag(m.package)}</td>
+          <td>${statusTag(m.status)}</td>
+          <td>${escapeHtml(fmtDate(m.expiresAt))}</td>
+          <td>
+            <button class="pill" type="button" data-edit="${escapeHtml(m.uid)}">แก้ไข</button>
+          </td>
+        </tr>
+      `).join("");
+
+      document.querySelectorAll("[data-edit]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const member = allMembers.find((x) => x.uid === btn.dataset.edit);
+          if (member) fillForm(member);
+        });
+      });
+    }
+
+    function updateStats() {
+      const total = allMembers.length;
+      const pro = allMembers.filter((m) => ["PRO", "PRO+"].includes((m.package || "").toUpperCase())).length;
+      const active = allMembers.filter((m) => (m.status || "active") === "active").length;
+      const pending = allMembers.filter((m) => (m.status || "") === "pending").length;
+      const admins = allMembers.filter((m) => (m.role || "") === "admin").length;
+      const expiring = allMembers.filter((m) => {
+        if (!m.expiresAt) return false;
+        const now = new Date();
+        const exp = new Date(m.expiresAt);
+        const diff = (exp - now) / (1000 * 60 * 60 * 24);
+        return diff >= 0 && diff <= 7;
+      }).length;
+
+      $("statTotal").textContent = total.toLocaleString("th-TH");
+      $("statPro").textContent = pro.toLocaleString("th-TH");
+      $("statActive").textContent = active.toLocaleString("th-TH");
+      $("statPending").textContent = pending.toLocaleString("th-TH");
+
+      $("pendingBadge").textContent = pending.toLocaleString("th-TH");
+      $("expiringBadge").textContent = expiring.toLocaleString("th-TH");
+      $("adminBadge").textContent = admins.toLocaleString("th-TH");
+
+      $("pkgFree").textContent = allMembers.filter((m) => (m.package || "FREE") === "FREE").length.toLocaleString("th-TH");
+      $("pkgTrial").textContent = allMembers.filter((m) => (m.package || "") === "TRIAL").length.toLocaleString("th-TH");
+      $("pkgPro").textContent = allMembers.filter((m) => (m.package || "") === "PRO").length.toLocaleString("th-TH");
+      $("pkgProPlus").textContent = allMembers.filter((m) => (m.package || "") === "PRO+").length.toLocaleString("th-TH");
+    }
+
+    async function loadMembers() {
+      const membersRef = collection(db, "members");
+      const qy = query(membersRef, orderBy("updatedAt", "desc"));
+      const snap = await getDocs(qy);
+
+      allMembers = snap.docs.map((d) => {
+        const data = d.data() || {};
+        return {
+          uid: data.uid || d.id,
+          email: data.email || "",
+          displayName: data.displayName || "",
+          role: data.role || "member",
+          package: data.package || "FREE",
+          status: data.status || "active",
+          expiresAt: data.expiresAt || "",
+          notes: data.notes || "",
+          provider: data.provider || "password"
+        };
+      });
+
+      updateStats();
+      renderTable();
+    }
+
+    async function ensureAdmin(user) {
+      const ref = doc(db, "members", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        throw new Error("ไม่พบข้อมูลสมาชิกของบัญชีนี้ในระบบ");
+      }
+
+      const data = snap.data() || {};
+      if ((data.role || "").toLowerCase() !== "admin") {
+        throw new Error("บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานหน้าหลังบ้าน");
+      }
+
+      currentAdmin = {
+        uid: user.uid,
+        email: user.email || data.email || "",
+        displayName: user.displayName || data.displayName || "Admin",
+        role: data.role || "admin"
+      };
+
+      adminInfoBtn.textContent = `${currentAdmin.displayName} (${currentAdmin.email})`;
+    }
+
+    async function saveMember(event) {
+      event.preventDefault();
+      hideNotice();
+
+      const uid = $("memberUid").value.trim();
+      const displayName = $("displayName").value.trim();
+      const email = $("email").value.trim();
+      const role = $("role").value;
+      const pkg = $("package").value;
+      const status = $("status").value;
+      const expiresAt = $("expiresAt").value;
+      const notes = $("notes").value.trim();
+
+      if (!displayName || !email) {
+        showNotice("กรุณากรอกชื่อสมาชิกและอีเมลให้ครบ", "error");
+        return;
+      }
+
+      const docId = uid || crypto.randomUUID();
+      const ref = doc(db, "members", docId);
+
+      const payload = {
+        uid: docId,
+        displayName,
+        email,
+        role,
+        package: pkg,
+        status,
+        expiresAt: expiresAt || "",
+        notes,
+        updatedAt: serverTimestamp()
+      };
+
+      if (!uid) {
+        payload.createdAt = serverTimestamp();
+        payload.provider = "manual";
+      }
+
+      await setDoc(ref, payload, { merge: true });
+
+      showNotice(uid ? "อัปเดตข้อมูลสมาชิกเรียบร้อยแล้ว" : "เพิ่มสมาชิกใหม่เรียบร้อยแล้ว", "success");
+      resetForm();
+      await loadMembers();
+    }
+
+    async function deleteSelectedMember() {
+      hideNotice();
+      const uid = $("memberUid").value.trim();
+
+      if (!uid) {
+        showNotice("กรุณาเลือกสมาชิกจากตารางก่อนลบ", "error");
+        return;
+      }
+
+      if (currentAdmin && uid === currentAdmin.uid) {
+        showNotice("ไม่สามารถลบบัญชีแอดมินที่กำลังใช้งานอยู่ได้", "error");
+        return;
+      }
+
+      const ok = confirm("ยืนยันการลบสมาชิกนี้หรือไม่");
+      if (!ok) return;
+
+      await deleteDoc(doc(db, "members", uid));
+      showNotice("ลบสมาชิกเรียบร้อยแล้ว", "success");
+      resetForm();
+      await loadMembers();
+    }
+
+    async function bootstrap(user) {
+      try {
+        await ensureAdmin(user);
+        resetForm();
+        await loadMembers();
+        document.body.style.visibility = "visible";
+      } catch (err) {
+        alert(err.message);
+        window.location.replace("app.html");
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.replace("login.html");
+        return;
+      }
+
+      await bootstrap(user);
+    });
+
+    $("refreshBtn").addEventListener("click", async () => {
+      hideNotice();
+      await loadMembers();
+      showNotice("รีเฟรชข้อมูลล่าสุดแล้ว", "success");
+    });
+
+    $("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.replace("login.html");
+    });
+
+    memberForm.addEventListener("submit", saveMember);
+
+    $("resetBtn").addEventListener("click", () => {
+      resetForm();
+      hideNotice();
+    });
+
+    $("deleteBtn").addEventListener("click", deleteSelectedMember);
+
+    searchInput.addEventListener("input", renderTable);
+    filterStatus.addEventListener("change", renderTable);
+    filterPackage.addEventListener("change", renderTable);
+  </script>
+</body>
+</html>
