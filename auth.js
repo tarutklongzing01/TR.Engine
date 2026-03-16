@@ -22,7 +22,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const REDIRECT_AFTER_LOGIN = "app.html";
+const REDIRECT_AFTER_LOGIN = "index.html";
 const AUTH_PAGES = ["login.html", "register.html"];
 
 function $(id) {
