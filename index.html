@@ -247,7 +247,7 @@
 <body>
   <div class="container">
     <section class="hero">
-      <div class="badge">Version 1.0.5</div>
+      <div class="badge">Version 1.0.6</div>
       <h1>Engine Calculator Pro</h1>
       <div class="subtitle">
         เลือกเครื่องมือที่ต้องการใช้งานจากเมนูด้านล่าง
@@ -257,12 +257,12 @@
 
     <div class="topbar">
       <div class="topbar-left">
-        <div class="user-pill" id="memberStatus">สถานะ: กำลังโหลด...</div>
+        <div class="user-pill" id="memberStatus">บัญชี: กำลังโหลด...</div>
         <div class="user-pill" id="memberRole">ระดับ: -</div>
       </div>
 
       <div class="user-actions">
-        <a class="btn secondary" href="profile.html">ข้อมูลสมาชิก</a>
+        
         <button class="btn danger" onclick="logoutMember()">ออกจากระบบ</button>
       </div>
     </div>
@@ -294,6 +294,20 @@
 
       <div class="menu-card">
         <div class="menu-icon">🛠️</div>
+        <h3>Special Tools</h3>
+        <p>
+          รวมข้อมูลเครื่องมือสำหรับซ่อมมอเตอร์ไซค์ในไทยทั้งรุ่นเก่าและรุ่นใหม่
+          เช่น ลูกบล็อก ฟิลเลอร์เกจ ประแจปอนด์ น็อตล้อ น็อตครัช และแรงบิดเบื้องต้น
+        </p>
+        <div class="menu-actions">
+          <a class="btn menu-link" href="Tools.html">เข้าใช้งาน</a>
+        </div>
+      </div>
+
+      
+
+      <div class="menu-card">
+        <div class="menu-icon">🧪</div>
         <h3>Tools อื่น ๆ</h3>
         <p>
           พื้นที่สำหรับเพิ่มเครื่องมือใหม่ในอนาคต เช่น Fuel Calculator,
@@ -337,7 +351,7 @@
         return;
       }
 
-      memberStatus.textContent = `สถานะ: ${user.email || "เข้าสู่ระบบแล้ว"}`;
+      memberStatus.textContent = `บัญชี: ${user.email || "เข้าสู่ระบบแล้ว"}`;
 
       try {
         const ref = doc(db, "members", user.uid);

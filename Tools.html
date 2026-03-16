@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>เครื่องมือพิเศษ - TR REMAP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0b1220;
+      --panel:#121c2f;
+      --panel2:#0f1728;
+      --panel3:#0c1628;
+      --border:#263755;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --blue:#4f8cff;
+      --blue2:#3b82f6;
+      --green:#22c55e;
+      --yellow:#f59e0b;
+      --cyan:#22d3ee;
+      --shadow:0 18px 40px rgba(0,0,0,.32);
+      --radius:24px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      font-family:'Kanit',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(79,140,255,.14), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.08), transparent 22%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    }
+
+    body{ padding:20px; }
+
+    .page{
+      max-width:1280px;
+      margin:0 auto;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .brand-wrap{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(79,140,255,.28);
+      background:rgba(79,140,255,.12);
+      color:#cfe0ff;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .topbar h1{
+      margin:0;
+      font-size:34px;
+      line-height:1.15;
+    }
+
+    .topbar p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+      max-width:840px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:16px;
+      padding:13px 16px;
+      font-family:inherit;
+      font-size:14px;
+      font-weight:700;
+      transition:.18s ease;
+    }
+
+    .btn:hover{ transform:translateY(-1px); }
+
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(180deg, var(--blue), var(--blue2));
+      box-shadow:0 12px 26px rgba(79,140,255,.25);
+    }
+
+    .btn-ghost{
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .actions a.btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+    }
+
+    .shell{
+      display:grid;
+      grid-template-columns:380px 1fr;
+      gap:18px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(18,28,47,.95), rgba(10,18,32,.96));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .sidebar{
+      padding:18px;
+      position:sticky;
+      top:20px;
+      height:max-content;
+    }
+
+    .content{ padding:18px; }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size:20px;
+    }
+
+    .section-title span{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .grid{ display:grid; gap:14px; }
+
+    .field{ display:grid; gap:7px; }
+
+    .field label{
+      font-size:14px;
+      color:#dbe7ff;
+      font-weight:500;
+    }
+
+    .field input,
+    .field select{
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--panel2);
+      color:var(--text);
+      outline:none;
+      border-radius:16px;
+      padding:13px 14px;
+      font-family:inherit;
+      font-size:14px;
+      transition:.18s ease;
+    }
+
+    .field input:focus,
+    .field select:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(79,140,255,.14);
+    }
+
+    .quick-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .tag{
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      color:#dce9ff;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:.18s ease;
+    }
+
+    .tag:hover{
+      transform:translateY(-1px);
+      border-color:rgba(79,140,255,.24);
+      background:rgba(79,140,255,.1);
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .summary-card{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.04);
+    }
+
+    .summary-card .num{
+      font-size:28px;
+      font-weight:700;
+      line-height:1;
+      margin-bottom:8px;
+    }
+
+    .summary-card .txt{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .content-block{
+      padding:16px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+      margin-bottom:16px;
+    }
+
+    .result-toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .result-count{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .tool-card{
+      border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+      border-radius:22px;
+      padding:16px;
+      transition:.18s ease;
+    }
+
+    .tool-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(79,140,255,.22);
+      box-shadow:0 16px 30px rgba(0,0,0,.18);
+    }
+
+    .tool-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .tool-title{
+      margin:0;
+      font-size:18px;
+      line-height:1.35;
+    }
+
+    .tool-pill{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      color:#dff7ff;
+      background:rgba(34,211,238,.12);
+      border:1px solid rgba(34,211,238,.22);
+      white-space:nowrap;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:12px;
+    }
+
+    .meta span{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:#dce9ff;
+      background:rgba(79,140,255,.08);
+      border:1px solid rgba(79,140,255,.14);
+    }
+
+    .detail-list{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .detail-row{
+      display:grid;
+      grid-template-columns:130px 1fr;
+      gap:10px;
+      align-items:start;
+      padding:8px 0;
+      border-bottom:1px dashed rgba(255,255,255,.06);
+    }
+
+    .detail-row:last-child{
+      border-bottom:none;
+      padding-bottom:0;
+    }
+
+    .detail-row .k{
+      color:#bdd0f4;
+      font-size:13px;
+    }
+
+    .detail-row .v{
+      color:var(--text);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .empty{
+      padding:24px;
+      text-align:center;
+      color:var(--muted);
+      border-radius:20px;
+      border:1px dashed rgba(255,255,255,.09);
+      background:rgba(255,255,255,.025);
+    }
+
+    .data-table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:18px;
+    }
+
+    .data-table th,
+    .data-table td{
+      text-align:left;
+      padding:12px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:14px;
+      vertical-align:top;
+    }
+
+    .data-table th{
+      color:#dbe7ff;
+      background:rgba(79,140,255,.08);
+      font-weight:600;
+    }
+
+    .data-table td{
+      color:var(--muted);
+    }
+
+    .guide-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+
+    .guide-card{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+    }
+
+    .guide-card h3{
+      margin:0 0 10px;
+      font-size:17px;
+    }
+
+    .guide-card ul{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    .mini-note{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      color:#ffe8b5;
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.18);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .footer-note{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      text-align:center;
+    }
+
+    @media (max-width: 1100px){
+      .shell{ grid-template-columns:1fr; }
+      .sidebar{ position:static; }
+      .summary{ grid-template-columns:repeat(2,1fr); }
+      .cards{ grid-template-columns:1fr; }
+      .guide-grid{ grid-template-columns:1fr; }
+    }
+
+    @media (max-width: 640px){
+      body{ padding:14px; }
+      .topbar h1{ font-size:28px; }
+      .summary{ grid-template-columns:1fr; }
+      .detail-row{ grid-template-columns:1fr; gap:4px; }
+      .content,
+      .sidebar{ padding:14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand-wrap">
+        <div class="badge">Special Tools</div>
+        <h1>เครื่องมือพิเศษ / คู่มือเครื่องมือช่าง</h1>
+        <p>
+          รวมข้อมูลเครื่องมือสำหรับซ่อมมอเตอร์ไซค์ในไทยทั้งรุ่นเก่าและรุ่นใหม่ โดยยึดระบบเมตริกเป็นหลัก
+          เพราะรถส่วนใหญ่ใช้เครื่องมือพื้นฐานร่วมกันได้เกือบหมด และต่างกันจริง ๆ แค่บางจุดสำคัญ เช่น น็อตล้อ น็อตครัช วาล์ว และเครื่องมือพิเศษเฉพาะรุ่น
+        </p>
+      </div>
+
+      <div class="actions">
+        <a href="index.html" class="btn btn-ghost">← กลับหน้าแรก</a>
+        <button class="btn btn-ghost" type="button" onclick="resetFilters()">รีเซ็ตตัวกรอง</button>
+        <button class="btn btn-primary" type="button" onclick="scrollToResults()">ดูข้อมูลเครื่องมือ</button>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="panel sidebar">
+        <div class="section-title">
+          <h2>ค้นหาข้อมูล</h2>
+          <span>เครื่องมือที่ใช้บ่อยในไทย</span>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="brandFilter">กลุ่มแบรนด์</label>
+            <select id="brandFilter"></select>
+          </div>
+
+          <div class="field">
+            <label for="modelFilter">กลุ่มรถ / การใช้งาน</label>
+            <select id="modelFilter"></select>
+          </div>
+
+          <div class="field">
+            <label for="yearFilter">ช่วงรุ่น</label>
+            <select id="yearFilter"></select>
+          </div>
+
+          <div class="field">
+            <label for="categoryFilter">หมวดงาน</label>
+            <select id="categoryFilter"></select>
+          </div>
+
+          <div class="field">
+            <label for="searchInput">ค้นหาคำ</label>
+            <input id="searchInput" type="text" placeholder="เช่น คลัตช์, ฟิลเลอร์เกจ, น็อตล้อ, ประแจปอนด์">
+          </div>
+
+          <div class="field">
+            <label>ค้นหาไว</label>
+            <div class="quick-tags">
+              <div class="tag" onclick="setQuickSearch('คลัตช์')">คลัตช์</div>
+              <div class="tag" onclick="setQuickSearch('ฟิลเลอร์เกจ')">ฟิลเลอร์เกจ</div>
+              <div class="tag" onclick="setQuickSearch('หัวเทียน')">หัวเทียน</div>
+              <div class="tag" onclick="setQuickSearch('น็อตล้อ')">น็อตล้อ</div>
+              <div class="tag" onclick="setQuickSearch('ประแจปอนด์')">ประแจปอนด์</div>
+              <div class="tag" onclick="setQuickSearch('ถ่ายน้ำมันเครื่อง')">ถ่ายน้ำมันเครื่อง</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini-note">
+          ก่อนลงมือทุกครั้ง ควรดูคู่มือซ่อมของรุ่นนั้นเสมอ ใช้ประแจปอนด์กับจุดสำคัญ ทำความสะอาดเกลียวก่อนขัน
+          ใช้ anti-seize หรือน้ำมันเล็กน้อยเมื่อเกลียวแห้งเกิน และตรวจสอบฟิลเลอร์เกจให้สะอาด ไม่บุบ ไม่งอ
+        </div>
+      </aside>
+
+      <main class="panel content">
+        <div class="summary">
+          <div class="summary-card">
+            <div class="num" id="sumTools">0</div>
+            <div class="txt">รายการเครื่องมือหลักในฐานข้อมูล</div>
+          </div>
+          <div class="summary-card">
+            <div class="num" id="sumBrands">0</div>
+            <div class="txt">กลุ่มแบรนด์ที่อ้างอิงในไทย</div>
+          </div>
+          <div class="summary-card">
+            <div class="num" id="sumResults">0</div>
+            <div class="txt">ผลลัพธ์ที่ตรงกับตัวกรองตอนนี้</div>
+          </div>
+          <div class="summary-card">
+            <div class="num" id="sumCategories">0</div>
+            <div class="txt">จำนวนหมวดงานที่รองรับ</div>
+          </div>
+        </div>
+
+        <section class="content-block" id="resultSection">
+          <div class="result-toolbar">
+            <div class="section-title" style="margin:0;">
+              <h2>เครื่องมือพื้นฐานที่ใช้บ่อย</h2>
+              <span>เหมาะกับมอเตอร์ไซค์ไทยส่วนใหญ่</span>
+            </div>
+            <div class="result-count" id="resultCount">พบ 0 รายการ</div>
+          </div>
+
+          <div id="toolCards" class="cards"></div>
+        </section>
+
+        <section class="content-block">
+          <div class="section-title">
+            <h2>ขนาดลูกบล็อกและเบอร์น็อตที่ใช้บ่อย</h2>
+            <span>Metric เป็นหลัก</span>
+          </div>
+
+          <div style="overflow:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>จุดใช้งานทั่วไป</th>
+                  <th>ขนาดหัวน็อต / เครื่องมือ</th>
+                  <th>ตัวอย่างรุ่นที่พบ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>น็อตล้อหน้า / หลัง</td><td>17, 19, 22, 24 mm</td><td>Wave, Scoopy, Finn, Aerox</td></tr>
+                <tr><td>น็อตยึดเครื่องยนต์ / ฝาสูบ</td><td>10, 12, 14 mm</td><td>Wave 110i/125i, Exciter</td></tr>
+                <tr><td>น็อตครัชออโต้</td><td>39 หรือ 41 mm</td><td>PCX, Click, NMAX, Aerox</td></tr>
+                <tr><td>หัวเทียน</td><td>16 หรือ 18 mm</td><td>ส่วนใหญ่</td></tr>
+                <tr><td>น็อตถ่ายน้ำมันเครื่อง</td><td>17 หรือ 19 mm</td><td>Honda / Yamaha ทั่วไป</td></tr>
+                <tr><td>น็อตโซ่ / สเตอร์</td><td>19, 22, 27 mm</td><td>Exciter, Wave</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-block">
+          <div class="section-title">
+            <h2>ประแจปอนด์ที่แนะนำ</h2>
+            <span>สำหรับงานมอเตอร์ไซค์ไทย</span>
+          </div>
+
+          <div style="overflow:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Drive</th>
+                  <th>ช่วงแรงบิด</th>
+                  <th>เหมาะกับงาน</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1/4&quot;</td><td>2-25 Nm</td><td>งานวาล์ว หัวเทียน ฝาครอบ งานเล็ก</td></tr>
+                <tr><td>3/8&quot;</td><td>5-50 Nm</td><td>งานเครื่องยนต์ทั่วไป งานหลักของ DIY</td></tr>
+                <tr><td>1/2&quot;</td><td>10-100 Nm</td><td>ล้อ เพลา โช้ค งานหนัก</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-block">
+          <div class="section-title">
+            <h2>ตารางแรงบิดอ้างอิง</h2>
+            <span>ค่าประมาณทั่วไป ต้องเช็กคู่มือรุ่นจริงเสมอ</span>
+          </div>
+
+          <div style="overflow:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>จุดใช้งาน</th>
+                  <th>แรงบิดอ้างอิง</th>
+                  <th>หมายเหตุ</th>
+                </tr>
+              </thead>
+              <tbody id="torqueTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-block">
+          <div class="section-title">
+            <h2>แนวทางเลือกเครื่องมือมาตรฐาน</h2>
+            <span>เอาไว้ใช้เลือกของเข้าร้าน / ใช้เองที่บ้าน</span>
+          </div>
+
+          <div class="guide-grid">
+            <div class="guide-card">
+              <h3>ฟิลเลอร์เกจ</h3>
+              <ul>
+                <li>ควรมีช่วง 0.02 - 1.00 mm หรืออย่างน้อย 0.03, 0.04, 0.05, 0.06, 0.08, 0.10 mm</li>
+                <li>Honda Wave / Finn / Scoopy มักเจอ 0.05 / 0.08 mm</li>
+                <li>Yamaha Aerox / Exciter มักอยู่ช่วง 0.04 - 0.08 mm</li>
+                <li>ควรเลือกแบบสแตนเลสหนา ๆ กันบุบ และเช็ดให้สะอาดก่อนใช้ทุกครั้ง</li>
+              </ul>
+            </div>
+
+            <div class="guide-card">
+              <h3>ลูกบล็อกและเบอร์ที่ควรมี</h3>
+              <ul>
+                <li>มอเตอร์ไซค์ไทยใช้ Metric เกือบทั้งหมด ไม่ค่อยใช้ SAE</li>
+                <li>เบอร์ที่ใช้บ่อยมาก: 8, 10, 12, 14, 17, 19, 22, 24, 27, 30, 32 mm</li>
+                <li>บางรุ่นออโต้ควรมีลูกบล็อกครัช 39 หรือ 41 mm</li>
+                <li>แนะนำมี 3/8 นิ้วเป็นชุดหลักสำหรับงาน DIY มอเตอร์ไซค์</li>
+              </ul>
+            </div>
+
+            <div class="guide-card">
+              <h3>ประแจปอนด์</h3>
+              <ul>
+                <li>จุดเล็ก ๆ บนมอเตอร์ไซค์ขันเกินมีสิทธิ์แตกหรือเกลียวรูดได้</li>
+                <li>ถ้างบจำกัด เริ่มจาก 1/2 นิ้วช่วง 10-100 Nm ก่อนก็ได้</li>
+                <li>วิธีใช้คือ ตั้งค่า ขันช้า ๆ จนคลิก แล้วหยุดทันที</li>
+                <li>ถ้าขันเปียกหรือมีน้ำมันบนเกลียว ควรลดค่าลงประมาณ 20-30%</li>
+              </ul>
+            </div>
+
+            <div class="guide-card">
+              <h3>เครื่องมือพื้นฐานที่ควรมี</h3>
+              <ul>
+                <li>ชุดลูกบล็อก 3/8 นิ้ว metric 8-19 mm และ 1/4 นิ้วสำหรับงานเล็ก</li>
+                <li>ประแจปอนด์ 1/4 และ 3/8 หรือ 1/2 ถ้างบถึง</li>
+                <li>ฟิลเลอร์เกจ 0.02-1.00 mm</li>
+                <li>ประแจแหวน / ปากตาย 8-22 mm, ประแจหัวเทียน, ลูกบล็อกครัช 39/41 mm, ประแจแอล 4-10 mm</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <div class="footer-note">
+          TR REMAP Special Tools • หน้านี้ปรับให้เน้นเครื่องมือที่ใช้ร่วมกันได้เกือบหมดในมอเตอร์ไซค์ไทย และแยกจุดเฉพาะรุ่นไว้เฉพาะงานสำคัญ
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const toolsData = [
+      {
+        brand: "Honda / Yamaha / Suzuki / Kawasaki / Vespa / EM / Deco",
+        family: "รถในไทยทั้งรุ่นเก่า-ใหม่",
+        year: "ใช้ร่วมกันได้ส่วนใหญ่",
+        category: "ลูกบล็อก",
+        toolName: "ชุดลูกบล็อก Metric",
+        toolType: "Socket Set",
+        size: "8, 10, 12, 14, 17, 19, 22, 24, 27, 30, 32 mm",
+        standardTool: "ระบบเมตริกเป็นหลัก แนะนำมี 1/4, 3/8 และ 1/2 นิ้ว",
+        useFor: "งานทั่วไปของมอเตอร์ไซค์ไทย",
+        socketSize: "1/4\" / 3/8\" / 1/2\"",
+        boltSize: "Metric",
+        torque: "-",
+        note: "3/8 นิ้วเหมาะสุดสำหรับงาน DIY มอเตอร์ไซค์",
+        keywords: "ลูกบล็อก metric 8 10 12 14 17 19 22 24 27 30 32"
+      },
+      {
+        brand: "Honda / Yamaha / Suzuki",
+        family: "รถออโต้ยอดนิยม",
+        year: "รุ่นเก่าและใหม่",
+        category: "ครัชออโต้",
+        toolName: "ลูกบล็อกถอดครัชออโต้",
+        toolType: "ลูกบล็อกพิเศษ",
+        size: "39 หรือ 41 mm",
+        standardTool: "ใช้คู่กับบล็อกยิงไฟฟ้าหรือเครื่องมือจับที่เหมาะสม",
+        useFor: "ถอดน็อตครัชของรถออโต้",
+        socketSize: "39 / 41 mm",
+        boltSize: "น็อตครัช",
+        torque: "ประมาณ 40-60 Nm",
+        note: "พบได้ใน PCX, Click, NMAX, Aerox และรถออโต้หลายรุ่น",
+        keywords: "ครัชออโต้ 39 41 pcx click nmax aerox"
+      },
+      {
+        brand: "Honda / Yamaha",
+        family: "รถครอบครัว / รถใช้งาน",
+        year: "รุ่นเก่าและใหม่",
+        category: "ฟิลเลอร์เกจ",
+        toolName: "ฟิลเลอร์เกจ",
+        toolType: "Feeler Gauge",
+        size: "0.02 - 1.00 mm",
+        standardTool: "สแตนเลส ใบไม่บุบ ไม่งอ",
+        useFor: "ตั้งระยะวาล์ว และวัดช่องหัวเทียน",
+        socketSize: "-",
+        boltSize: "-",
+        torque: "-",
+        note: "อย่างน้อยควรมี 0.03, 0.04, 0.05, 0.06, 0.08, 0.10 mm",
+        keywords: "ฟิลเลอร์เกจ valve clearance 0.05 0.08"
+      },
+      {
+        brand: "Honda / Yamaha / Suzuki / Kawasaki / Vespa",
+        family: "งานทั่วไป",
+        year: "ใช้ได้ทุกยุค",
+        category: "ประแจปอนด์",
+        toolName: "ประแจปอนด์",
+        toolType: "Torque Wrench",
+        size: "1/4\", 3/8\", 1/2\"",
+        standardTool: "ควรมีอย่างน้อย 1 ตัวที่ตรงงานหลัก",
+        useFor: "ขันจุดสำคัญตามแรงบิด",
+        socketSize: "1/4\" 2-25 Nm / 3/8\" 5-50 Nm / 1/2\" 10-100 Nm",
+        boltSize: "-",
+        torque: "ตามจุดใช้งาน",
+        note: "จุดสำคัญต้องใช้ประแจปอนด์เสมอ",
+        keywords: "ประแจปอนด์ torque wrench"
+      },
+      {
+        brand: "Honda / Yamaha / Suzuki / Kawasaki",
+        family: "งานหัวเทียน",
+        year: "ใช้ร่วมกันได้ส่วนใหญ่",
+        category: "หัวเทียน",
+        toolName: "บล็อกหัวเทียน",
+        toolType: "Spark Plug Socket",
+        size: "16 หรือ 18 mm",
+        standardTool: "ควรมีแม่เหล็กหรือยางจับ",
+        useFor: "ถอดใส่หัวเทียน",
+        socketSize: "16 / 18 mm",
+        boltSize: "หัวเทียน",
+        torque: "ประมาณ 10-18 Nm",
+        note: "ส่วนใหญ่พบในรถตลาดทั่วไป",
+        keywords: "หัวเทียน 16 18 spark plug"
+      },
+      {
+        brand: "Honda / Yamaha",
+        family: "งานเครื่อง",
+        year: "ใช้ร่วมกันได้ส่วนใหญ่",
+        category: "ถ่ายน้ำมันเครื่อง",
+        toolName: "บล็อกน็อตถ่ายน้ำมันเครื่อง",
+        toolType: "Socket / ประแจแหวน",
+        size: "17 หรือ 19 mm",
+        standardTool: "ใช้ประแจปอนด์ตอนประกอบกลับ",
+        useFor: "ถอดน็อตถ่ายน้ำมันเครื่อง",
+        socketSize: "17 / 19 mm",
+        boltSize: "น็อตถ่ายน้ำมันเครื่อง",
+        torque: "ประมาณ 20-30 Nm",
+        note: "Honda / Yamaha ทั่วไปมักพบช่วงนี้",
+        keywords: "ถ่ายน้ำมันเครื่อง 17 19 drain bolt"
+      },
+      {
+        brand: "Honda / Yamaha",
+        family: "งานล้อ / โซ่ / สเตอร์",
+        year: "ใช้ร่วมกันได้ส่วนใหญ่",
+        category: "ล้อและสเตอร์",
+        toolName: "บล็อกน็อตล้อ / โซ่ / สเตอร์",
+        toolType: "Socket Set",
+        size: "17, 19, 22, 24, 27 mm",
+        standardTool: "ควรมี 1/2 นิ้วสำหรับงานหนัก",
+        useFor: "ล้อหน้า ล้อหลัง เพลาล้อ โซ่ และสเตอร์",
+        socketSize: "17 / 19 / 22 / 24 / 27 mm",
+        boltSize: "น็อตล้อ / เพลาล้อ / สเตอร์",
+        torque: "ล้อหน้า 50-60 Nm / ล้อหลัง 60-100 Nm / เพลาหลัง 80-120 Nm",
+        note: "Exciter, Wave, Aerox และรถใช้งานไทยพบช่วงนี้บ่อย",
+        keywords: "ล้อหน้า ล้อหลัง เพลาหลัง สเตอร์ โซ่"
+      },
+      {
+        brand: "Honda / Yamaha",
+        family: "งานวาล์ว",
+        year: "รุ่นเก่าและใหม่",
+        category: "ประแจตั้งวาล์ว",
+        toolName: "ประแจตั้งวาล์ว",
+        toolType: "Valve Adjusting Tool",
+        size: "ตามหัวล็อกของแต่ละรุ่น",
+        standardTool: "ควรใช้ให้ตรงกับรุ่นหรือขนาดหัวปรับ",
+        useFor: "ปรับตั้งวาล์วใน Wave, Fino, Scoopy และรุ่นใกล้เคียง",
+        socketSize: "-",
+        boltSize: "ตามรุ่น",
+        torque: "ล็อกนัทประมาณ 10-14 Nm",
+        note: "ช่วยให้ตั้งวาล์วง่ายและไม่เพี้ยนตอนขันล็อก",
+        keywords: "ประแจตั้งวาล์ว wave fino scoopy"
+      }
+    ];
+
+    const torqueData = [
+      { item: "น็อตล้อหน้า", torque: "50-60 Nm", note: "เช่น Wave, Scoopy" },
+      { item: "น็อตล้อหลัง", torque: "60-100 Nm", note: "Wave ประมาณ 59 Nm, Aerox ประมาณ 90-100 Nm" },
+      { item: "เพลาล้อหลัง (Axle Nut)", torque: "80-120 Nm", note: "Exciter ประมาณ 100 Nm" },
+      { item: "หัวเทียน", torque: "10-18 Nm", note: "ส่วนใหญ่ 12-16 Nm" },
+      { item: "น็อตถ่ายน้ำมันเครื่อง", torque: "20-30 Nm", note: "Wave ประมาณ 24 Nm" },
+      { item: "น็อตครัช (Clutch Nut)", torque: "40-60 Nm", note: "Scoopy / PCX ประมาณ 50 Nm" },
+      { item: "น็อตยึดฝาสูบ", torque: "18-30 Nm", note: "มักขันหลายรอบตามลำดับ" },
+      { item: "น็อตตั้งวาล์ว Lock Nut", torque: "10-14 Nm", note: "พบทั่วไปในรถครอบครัว" }
+    ];
+
+    const brandFilter = document.getElementById("brandFilter");
+    const modelFilter = document.getElementById("modelFilter");
+    const yearFilter = document.getElementById("yearFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    const toolCards = document.getElementById("toolCards");
+    const resultCount = document.getElementById("resultCount");
+    const torqueTableBody = document.getElementById("torqueTableBody");
+
+    function uniqueValues(arr, key){
+      return [...new Set(arr.map(x => x[key]).filter(Boolean))].sort((a,b) => String(a).localeCompare(String(b), 'th'));
+    }
+
+    function fillSelect(select, values, defaultText){
+      select.innerHTML = "";
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = defaultText;
+      select.appendChild(defaultOption);
+
+      values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+      });
+    }
+
+    function initFilters(){
+      fillSelect(brandFilter, ["Honda", "Yamaha", "Suzuki", "Kawasaki", "Vespa", "EM", "Deco"], "ทุกกลุ่มแบรนด์");
+      fillSelect(modelFilter, ["รถครอบครัว", "รถออโต้", "รถใช้งาน", "บิ๊กไบค์", "ไฟฟ้า", "ใช้ร่วมกันได้ส่วนใหญ่"], "ทุกกลุ่มรถ / การใช้งาน");
+      fillSelect(yearFilter, ["รุ่นเก่าในไทย", "รุ่นใหม่ในไทย", "ปี 2025-2026", "ใช้ร่วมกันได้ส่วนใหญ่"], "ทุกช่วงรุ่น");
+      fillSelect(categoryFilter, uniqueValues(toolsData, "category"), "ทุกหมวดงาน");
+      updateSummary();
+      renderTools();
+      renderTorqueTable();
+    }
+
+    function getFilteredData(){
+      const brand = brandFilter.value.trim().toLowerCase();
+      const model = modelFilter.value.trim().toLowerCase();
+      const year = yearFilter.value.trim().toLowerCase();
+      const category = categoryFilter.value.trim();
+      const keyword = searchInput.value.trim().toLowerCase();
+
+      return toolsData.filter(item => {
+        const textPool = [
+          item.brand,
+          item.family,
+          item.year,
+          item.category,
+          item.toolName,
+          item.toolType,
+          item.size,
+          item.standardTool,
+          item.useFor,
+          item.socketSize,
+          item.boltSize,
+          item.torque,
+          item.note,
+          item.keywords
+        ].join(" ").toLowerCase();
+
+        return (!brand || textPool.includes(brand)) &&
+               (!model || textPool.includes(model)) &&
+               (!year || textPool.includes(year) || year === "ใช้ร่วมกันได้ส่วนใหญ่") &&
+               (!category || item.category === category) &&
+               (!keyword || textPool.includes(keyword));
+      });
+    }
+
+    function renderTools(){
+      const filtered = getFilteredData();
+
+      resultCount.textContent = `พบ ${filtered.length} รายการ`;
+      document.getElementById("sumResults").textContent = filtered.length;
+
+      if (!filtered.length){
+        toolCards.innerHTML = `
+          <div class="empty" style="grid-column:1/-1;">
+            ไม่พบข้อมูลที่ตรงกับตัวกรอง<br>
+            ลองเปลี่ยนกลุ่มแบรนด์ กลุ่มรถ หมวดงาน หรือคำค้นหาใหม่
+          </div>
+        `;
+        return;
+      }
+
+      toolCards.innerHTML = filtered.map(item => `
+        <article class="tool-card">
+          <div class="tool-head">
+            <div>
+              <h3 class="tool-title">${item.toolName}</h3>
+            </div>
+            <div class="tool-pill">${item.category}</div>
+          </div>
+
+          <div class="meta">
+            <span>${item.brand}</span>
+            <span>${item.family}</span>
+            <span>${item.year}</span>
+            <span>${item.toolType}</span>
+          </div>
+
+          <div class="detail-list">
+            <div class="detail-row"><div class="k">ขนาด / เบอร์</div><div class="v">${item.size || "-"}</div></div>
+            <div class="detail-row"><div class="k">ลูกบล็อก</div><div class="v">${item.socketSize || "-"}</div></div>
+            <div class="detail-row"><div class="k">เบอร์น็อต</div><div class="v">${item.boltSize || "-"}</div></div>
+            <div class="detail-row"><div class="k">ใช้กับงาน</div><div class="v">${item.useFor || "-"}</div></div>
+            <div class="detail-row"><div class="k">มาตรฐานแนะนำ</div><div class="v">${item.standardTool || "-"}</div></div>
+            <div class="detail-row"><div class="k">แรงบิดอ้างอิง</div><div class="v">${item.torque || "-"}</div></div>
+            <div class="detail-row"><div class="k">หมายเหตุ</div><div class="v">${item.note || "-"}</div></div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderTorqueTable(){
+      torqueTableBody.innerHTML = torqueData.map(row => `
+        <tr>
+          <td>${row.item}</td>
+          <td>${row.torque}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join("");
+    }
+
+    function updateSummary(){
+      document.getElementById("sumTools").textContent = toolsData.length;
+      document.getElementById("sumBrands").textContent = 7;
+      document.getElementById("sumCategories").textContent = new Set(toolsData.map(x => x.category)).size;
+      document.getElementById("sumResults").textContent = toolsData.length;
+    }
+
+    function setQuickSearch(text){
+      searchInput.value = text;
+      renderTools();
+      scrollToResults();
+    }
+
+    function resetFilters(){
+      brandFilter.value = "";
+      modelFilter.value = "";
+      yearFilter.value = "";
+      categoryFilter.value = "";
+      searchInput.value = "";
+      renderTools();
+    }
+
+    function scrollToResults(){
+      document.getElementById("resultSection").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    brandFilter.addEventListener("change", renderTools);
+    modelFilter.addEventListener("change", renderTools);
+    yearFilter.addEventListener("change", renderTools);
+    categoryFilter.addEventListener("change", renderTools);
+    searchInput.addEventListener("input", renderTools);
+
+    initFilters();
+  </script>
+</body>
+</html>
