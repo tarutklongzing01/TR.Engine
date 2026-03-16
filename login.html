@@ -26,7 +26,7 @@
     body{
       margin:0;
       min-height:100vh;
-      visibility:hidden;
+      visibility:visible;
       font-family:'Kanit',sans-serif;
       color:var(--text);
       background:
@@ -87,42 +87,63 @@
       max-width:520px;
     }
 
-    .feature-list{
+    .update-list{
       display:grid;
       gap:12px;
       margin-top:28px;
     }
 
-    .feature{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      padding:14px 16px;
+    .update-card{
+      padding:15px 16px;
       border-radius:18px;
       background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.05);
+      transition:.18s ease;
     }
 
-    .feature-dot{
+    .update-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(79,140,255,.20);
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+    }
+
+    .update-head{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+
+    .update-dot{
       width:12px;
       height:12px;
-      margin-top:6px;
       border-radius:50%;
       background:linear-gradient(180deg, var(--blue), #7fb2ff);
       box-shadow:0 0 14px rgba(79,140,255,.45);
       flex:0 0 12px;
     }
 
-    .feature strong{
-      display:block;
+    .update-version{
       font-size:15px;
-      margin-bottom:2px;
+      font-weight:700;
+      color:#ffffff;
     }
 
-    .feature span{
-      color:var(--muted);
+    .update-date{
+      font-size:12px;
+      color:#a9bad6;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(79,140,255,.08);
+      border:1px solid rgba(79,140,255,.14);
+    }
+
+    .update-card p{
+      margin:0;
       font-size:13px;
-      line-height:1.6;
+      line-height:1.7;
+      color:var(--muted);
     }
 
     .auth-right{
@@ -186,6 +207,40 @@
       color:#dce9ff;
     }
 
+    .auth-tabs button:hover,
+    .google-btn:hover,
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .msg{
+      margin:0 0 14px;
+      padding:13px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      text-align:center;
+      min-height:50px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .msg.success{
+      color:#d1fae5;
+      background:rgba(34,197,94,.12);
+      border-color:rgba(34,197,94,.22);
+    }
+
+    .msg.error{
+      color:#fecaca;
+      background:rgba(239,68,68,.12);
+      border-color:rgba(239,68,68,.22);
+    }
+
     .google-btn{
       width:100%;
       display:flex;
@@ -203,12 +258,6 @@
       color:#111827;
       box-shadow:0 10px 24px rgba(0,0,0,.16);
       transition:.18s ease;
-    }
-
-    .google-btn:hover,
-    .btn:hover,
-    .auth-tabs button:hover{
-      transform:translateY(-1px);
     }
 
     .google-icon{
@@ -279,34 +328,6 @@
       transition:.18s ease;
     }
 
-    .msg{
-      margin:0 0 14px;
-      padding:13px 14px;
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-      text-align:center;
-      min-height:50px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .msg.success{
-      color:#d1fae5;
-      background:rgba(34,197,94,.12);
-      border-color:rgba(34,197,94,.22);
-    }
-
-    .msg.error{
-      color:#fecaca;
-      background:rgba(239,68,68,.12);
-      border-color:rgba(239,68,68,.22);
-    }
-
     .bottom-note{
       text-align:center;
       margin-top:16px;
@@ -324,6 +345,7 @@
       .auth-shell{
         grid-template-columns:1fr;
       }
+
       .auth-left{
         display:none;
       }
@@ -333,38 +355,14 @@
 <body>
   <div class="auth-shell">
     <div class="auth-left">
-      <div class="auth-badge">TR REMAP • Secure Login</div>
-      <h1>เข้าสู่ระบบ<br>Engine Calculator Pro</h1>
+      <div class="auth-badge">Update Notes</div>
+      <h1>อัปเดตเว็บไซต์<br>Engine Calculator Pro</h1>
       <p>
-        เข้าถึงเครื่องมือคำนวณสเปครถแต่งและรถใช้งานได้อย่างรวดเร็ว
-        รองรับทั้งการล็อกอินด้วย Google และอีเมล
+        ติดตามการเปลี่ยนแปลงของระบบ เวอร์ชันล่าสุด และฟีเจอร์ใหม่
+        เพื่อให้ใช้งานได้สะดวก รวดเร็ว และเสถียรมากยิ่งขึ้น
       </p>
 
-      <div class="feature-list">
-        <div class="feature">
-          <div class="feature-dot"></div>
-          <div>
-            <strong>เข้าใช้งานไว</strong>
-            <span>ล็อกอินด้วย Google ได้ในคลิกเดียว</span>
-          </div>
-        </div>
-
-        <div class="feature">
-          <div class="feature-dot"></div>
-          <div>
-            <strong>จัดการสมาชิกอัตโนมัติ</strong>
-            <span>เชื่อมต่อ Firebase Authentication และเก็บข้อมูลสมาชิกได้ง่าย</span>
-          </div>
-        </div>
-
-        <div class="feature">
-          <div class="feature-dot"></div>
-          <div>
-            <strong>ไม่เด้งวน</strong>
-            <span>ระบบจะรอเช็คสถานะผู้ใช้ก่อนค่อยแสดงหน้า</span>
-          </div>
-        </div>
-      </div>
+      <div id="updateList" class="update-list"></div>
     </div>
 
     <div class="auth-right">
@@ -413,6 +411,45 @@
       </div>
     </div>
   </div>
+
+  <script>
+    const updateData = [
+      {
+        version: "Version 1.0.5",
+        date: "16 มี.ค. 2026",
+        detail: "เพิ่มระบบเข้าสู่ระบบด้วย Google และปรับการแสดงผลหน้าเข้าสู่ระบบให้ใช้งานง่ายขึ้น"
+      },
+      {
+        version: "Version 1.0.4",
+        date: "14 มี.ค. 2026",
+        detail: "ปรับปรุงระบบตรวจสอบสถานะผู้ใช้ ลดปัญหาหน้าเด้งวน และเพิ่มความเสถียรในการโหลดหน้า"
+        
+      },
+      {
+        version: "Version 1.0.3",
+        date: "10 มี.ค. 2026",
+        detail: "อัปเกรดหน้าเข้าสู่ระบบใหม่ ปรับดีไซน์ให้ทันสมัย รองรับมือถือ และแยกปุ่มเข้าสู่ระบบกับสมัครสมาชิกชัดเจน"
+      }
+    ];
+
+    function renderUpdates() {
+      const updateList = document.getElementById("updateList");
+      if (!updateList) return;
+
+      updateList.innerHTML = updateData.map(item => `
+        <div class="update-card">
+          <div class="update-head">
+            <div class="update-dot"></div>
+            <div class="update-version">${item.version}</div>
+            <div class="update-date">${item.date}</div>
+          </div>
+          <p>${item.detail}</p>
+        </div>
+      `).join("");
+    }
+
+    renderUpdates();
+  </script>
 
   <script type="module" src="./auth.js"></script>
 </body>
